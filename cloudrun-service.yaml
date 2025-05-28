@@ -1,0 +1,51 @@
+
+# Google Cloud Run service definition
+# Replace placeholders like YOUR_PROJECT_ID, YOUR_SERVICE_NAME, YOUR_REGION, and YOUR_IMAGE_NAME_TAG
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: your-app-name # Replace with your desired service name (e.g., la-vie-app)
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+  labels:
+    cloud.googleapis.com/location: YOUR_REGION # e.g., us-central1
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '0' # Set to '1' or more for no cold starts
+        autoscaling.knative.dev/maxScale: '2' # Adjust as needed
+    spec:
+      containerConcurrency: 80 # Adjust based on your app's performance
+      timeoutSeconds: 300 # Adjust as needed
+      containers:
+        - image: YOUR_REGION-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_ARTIFACT_REGISTRY_REPO_NAME/YOUR_IMAGE_NAME:latest # e.g., us-central1-docker.pkg.dev/my-gcp-project/my-app-repo/la-vie:latest
+          ports:
+            - name: http1
+              containerPort: 3000 # Port your Next.js app runs on inside the container (defined in Dockerfile)
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi # Adjust based on your app's needs
+          startupProbe:
+            timeoutSeconds: 240
+            periodSeconds: 240
+            failureThreshold: 1
+            tcpSocket:
+              port: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: NODE_ENV
+              value: "production"
+            # Add any other environment variables your application needs
+            # Example:
+            # - name: API_KEY
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: my-api-key-secret # Name of the secret in Google Secret Manager
+            #       key: latest # Version of the secret
+  traffic:
+    - percent: 100
+      latestRevision: true
