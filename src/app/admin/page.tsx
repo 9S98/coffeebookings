@@ -72,6 +72,7 @@ export default function AdminPage() {
   }, [selectedDate, bookings]);
 
   const bookedDays = useMemo(() => {
+    if (bookings.length === 0) return []; // Return empty array if no bookings to avoid error
     const dates = bookings.map(booking => booking.date);
     return dates;
   }, [bookings]);
@@ -116,8 +117,8 @@ export default function AdminPage() {
                 locale={dateLocale}
                 dir={dir}
                 className="rounded-md border"
-                modifiers={{ booked: bookedDays }}
-                modifiersStyles={{ booked: { border: `2px solid hsl(var(--primary))`, borderRadius: 'var(--radius)' } }}
+                modifiers={bookedDays.length > 0 ? { booked: bookedDays } : {}}
+                modifiersStyles={bookedDays.length > 0 ? { booked: { border: `2px solid hsl(var(--primary))`, borderRadius: 'var(--radius)' } } : {}}
               />
             </CardContent>
           </Card>
@@ -211,3 +212,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    

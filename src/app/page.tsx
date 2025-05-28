@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon, Users, Coffee, CalendarDays, Info, FileText, UploadCloud, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Users, Coffee, CalendarDays, Info, FileText, UploadCloud, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
 
@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -138,7 +137,7 @@ export default function BookingPage() {
               defaultValue={selectedGender || undefined}
               onValueChange={(value: Gender) => {
                 setSelectedGender(value);
-                setSelectedCupCategory(null); // Reset subsequent selections
+                setSelectedCupCategory(null); 
                 setSelectedDate(undefined);
                 setSelectedTimeSlot(null);
               }}
@@ -162,7 +161,7 @@ export default function BookingPage() {
                 value={selectedCupCategory?.id || ""}
                 onValueChange={(value) => {
                   setSelectedCupCategory(CUP_CATEGORIES.find(c => c.id === value) || null);
-                  setSelectedDate(undefined); // Reset subsequent selections
+                  setSelectedDate(undefined); 
                   setSelectedTimeSlot(null);
                 }}
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
@@ -190,31 +189,18 @@ export default function BookingPage() {
 
           {selectedGender && selectedCupCategory && (
             <SectionWrapper titleKey="selectDate" icon={<CalendarDays className="h-6 w-6" />}>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className={`${dir === 'rtl' ? 'ml-2' : 'mr-2'} h-4 w-4`} />
-                    {selectedDate ? format(selectedDate, 'PPP', { locale: dateLocale }) : <span>{t('pickDate')}</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => { setSelectedDate(date); setSelectedTimeSlot(null); }}
-                    initialFocus
-                    disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() -1))}
-                    locale={dateLocale}
-                    dir={dir}
-                  />
-                </PopoverContent>
-              </Popover>
+               <div className="flex justify-center">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => { setSelectedDate(date); setSelectedTimeSlot(null); }}
+                  initialFocus
+                  disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() -1))}
+                  locale={dateLocale}
+                  dir={dir}
+                  className="rounded-md border shadow-sm"
+                />
+              </div>
             </SectionWrapper>
           )}
           
@@ -420,3 +406,5 @@ export default function BookingPage() {
     </div>
   );
 }
+
+    
