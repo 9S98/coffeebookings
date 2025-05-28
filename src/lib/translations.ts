@@ -8,7 +8,7 @@ export const translations: AllTranslations = {
     language: "Language",
     english: "English",
     arabic: "Arabic",
-    selectGender: "For whom is the booking?",
+    selectGender: "Choose your booking", // Updated
     men: "Men",
     women: "Women",
     selectCupCategory: "Select Package",
@@ -82,7 +82,7 @@ export const translations: AllTranslations = {
     language: "اللغة",
     english: "الإنجليزية",
     arabic: "العربية",
-    selectGender: "لمن الحجز؟",
+    selectGender: "اختر نوع الحجز", // Updated
     men: "رجال",
     women: "نساء",
     selectCupCategory: "اختر الباقة",
