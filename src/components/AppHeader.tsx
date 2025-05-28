@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Coffee, Cog, Home, Sun } from 'lucide-react'; // Using Sun as a placeholder for LA VIE logo idea
+import { Cog, Home } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +19,7 @@ export default function AppHeader() {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
           {/* <Sun className="h-7 w-7" /> Replaced Coffee with Sun, or use a generic logo */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z"/><path d="M12 12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/></svg>
+          {/* Removed SVG logo */}
           <span>LA VIE</span>
         </Link>
         <nav className="flex items-center gap-4">
