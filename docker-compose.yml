@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    # Build the Docker image from the Dockerfile in the current directory
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Map port 3000 on the host to port 3000 in the container
+    ports:
+      - "3000:3000"
+    # Set environment variables for the container
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    # Restart policy (optional, consider 'unless-stopped' for production-like behavior)
+    # restart: always
+    # If you use a .env file for local development, you might want to include it
+    # Be cautious with committing sensitive information to your repository
+    # env_file:
+    #   - .env.local
