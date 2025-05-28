@@ -3,78 +3,94 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Arial', 'Helvetica', sans-serif;
 }
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --background: 36 44% 91%; /* #F2E9DD Soft beige */
+    --foreground: 28 67% 20%; /* Dark brown for text */
+
+    --card: 30 33% 97%; /* Lighter beige for cards */
+    --card-foreground: 28 67% 20%;
+
+    --popover: 30 33% 97%;
+    --popover-foreground: 28 67% 20%;
+
+    --primary: 28 100% 32%; /* #A64B00 Warm brown */
+    --primary-foreground: 30 100% 95%; /* Light color for text on primary */
+
+    --secondary: 38 50% 80%; /* A slightly darker beige or muted gold variant */
+    --secondary-foreground: 28 67% 25%;
+
+    --muted: 36 30% 85%; /* Muted beige */
+    --muted-foreground: 28 50% 40%;
+
+    --accent: 40 32% 65%; /* #CDB380 Muted gold */
+    --accent-foreground: 40 30% 25%; /* Dark color for text on accent */
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+
+    --border: 30 20% 80%; /* Muted brown/beige border */
+    --input: 30 20% 88%;
+    --ring: 28 100% 42%; /* Brighter primary for ring */
+
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --sidebar-background: 36 40% 88%; /* Adjusted for theme */
+    --sidebar-foreground: 28 67% 20%;
+    --sidebar-primary: 28 100% 32%;
+    --sidebar-primary-foreground: 30 100% 95%;
+    --sidebar-accent: 40 30% 70%;
+    --sidebar-accent-foreground: 28 67% 20%;
+    --sidebar-border: 30 20% 75%;
+    --sidebar-ring: 28 100% 42%;
   }
+
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    /* Define dark theme if needed, for now, focusing on light theme as per proposal */
+    --background: 28 20% 10%; /* Dark coffee brown */
+    --foreground: 36 44% 85%; /* Light beige text */
+
+    --card: 28 20% 12%;
+    --card-foreground: 36 44% 85%;
+
+    --popover: 28 20% 12%;
+    --popover-foreground: 36 44% 85%;
+
+    --primary: 28 100% 42%; /* Brighter warm brown for dark mode */
+    --primary-foreground: 30 100% 90%;
+
+    --secondary: 40 32% 55%; /* Darker muted gold */
+    --secondary-foreground: 36 44% 90%;
+
+    --muted: 28 15% 25%;
+    --muted-foreground: 36 30% 70%;
+
+    --accent: 40 32% 55%; /* Darker muted gold */
+    --accent-foreground: 36 44% 90%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --border: 28 15% 30%;
+    --input: 28 15% 30%;
+    --ring: 28 100% 52%;
+
+    --sidebar-background: 28 20% 8%;
+    --sidebar-foreground: 36 44% 85%;
+    --sidebar-primary: 28 100% 42%;
+    --sidebar-primary-foreground: 30 100% 90%;
+    --sidebar-accent: 40 30% 50%;
+    --sidebar-accent-foreground: 36 44% 85%;
+    --sidebar-border: 28 15% 25%;
+    --sidebar-ring: 28 100% 52%;
   }
 }
 
@@ -84,5 +100,9 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    direction: ltr; /* Default direction */
+  }
+  body.rtl {
+    direction: rtl;
   }
 }
