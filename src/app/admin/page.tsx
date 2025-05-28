@@ -1,9 +1,10 @@
+
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
-import { CalendarIcon, Users, Coffee, Clock, Phone, MapPin, Building, Home, Hash } from 'lucide-react';
+import { CalendarIcon, Users, Coffee, Clock, Phone, MapPin, Building, Home, Hash, LogOut } from 'lucide-react';
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useBooking } from '@/contexts/BookingContext';
@@ -22,12 +23,44 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import AdminLogin from '@/components/AdminLogin';
+
+const ADMIN_AUTH_KEY = 'laVieAdminAuthenticated';
 
 export default function AdminPage() {
   const { language, t, dir } = useLanguage();
   const { bookings } = useBooking();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
+
+  useEffect(() => {
+    // Check authentication status on mount from sessionStorage
+    // This effect should only run on the client
+    if (typeof window !== 'undefined') {
+      const authStatus = sessionStorage.getItem(ADMIN_AUTH_KEY);
+      if (authStatus === 'true') {
+        setIsAuthenticated(true);
+      }
+      setIsLoadingAuth(false);
+    }
+  }, []);
+
+  const handleLoginSuccess = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, 'true');
+    }
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    }
+    setIsAuthenticated(false);
+  };
 
   const dateLocale = language === 'ar' ? arSA : enUS;
 
@@ -43,13 +76,31 @@ export default function AdminPage() {
     return dates;
   }, [bookings]);
 
+  if (isLoadingAuth) {
+    // Render a loading state or null while checking auth status on the client
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
+  }
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8 text-primary flex items-center gap-2">
-        <CalendarIcon className="h-8 w-8" />
-        {t('adminDashboard')}
-      </h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
+          <CalendarIcon className="h-8 w-8" />
+          {t('adminDashboard')}
+        </h1>
+        <Button variant="outline" onClick={handleLogout}>
+          <LogOut className={`h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+          {t('logoutButton')}
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">

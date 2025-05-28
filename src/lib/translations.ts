@@ -1,3 +1,4 @@
+
 import type { AllTranslations } from '@/types';
 
 export const translations: AllTranslations = {
@@ -8,7 +9,7 @@ export const translations: AllTranslations = {
     language: "Language",
     english: "English",
     arabic: "Arabic",
-    selectGender: "Choose your booking", // Updated
+    selectGender: "Choose your booking",
     men: "Men",
     women: "Women",
     selectCupCategory: "Select Package",
@@ -73,7 +74,15 @@ export const translations: AllTranslations = {
     selectHour: "Select Hour",
     selectMinute: "Select Minute",
     allRightsReserved: "All rights reserved",
-    contactUs: "Contact Us"
+    contactUs: "Contact Us",
+    adminLoginTitle: "Admin Login",
+    adminLoginDescription: "Enter the password to access the admin dashboard.",
+    passwordLabel: "Password",
+    loginButton: "Login",
+    logoutButton: "Logout",
+    incorrectPassword: "Incorrect password. Please try again.",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
   },
   ar: {
     appName: "لا في",
@@ -82,7 +91,7 @@ export const translations: AllTranslations = {
     language: "اللغة",
     english: "الإنجليزية",
     arabic: "العربية",
-    selectGender: "اختر نوع الحجز", // Updated
+    selectGender: "اختر نوع الحجز",
     men: "رجال",
     women: "نساء",
     selectCupCategory: "اختر الباقة",
@@ -147,6 +156,14 @@ export const translations: AllTranslations = {
     selectHour: "اختر الساعة",
     selectMinute: "اختر الدقيقة",
     allRightsReserved: "جميع الحقوق محفوظة",
-    contactUs: "اتصل بنا"
+    contactUs: "اتصل بنا",
+    adminLoginTitle: "دخول المسؤول",
+    adminLoginDescription: "أدخل كلمة المرور للوصول إلى لوحة تحكم المسؤول.",
+    passwordLabel: "كلمة المرور",
+    loginButton: "تسجيل الدخول",
+    logoutButton: "تسجيل الخروج",
+    incorrectPassword: "كلمة مرور غير صحيحة. يرجى المحاولة مرة أخرى.",
+    showPassword: "إظهار كلمة المرور",
+    hidePassword: "إخفاء كلمة المرور",
   },
 };
