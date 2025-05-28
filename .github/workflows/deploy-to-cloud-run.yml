@@ -8,10 +8,10 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Your Google Cloud Project ID
-  GAR_LOCATION: YOUR_REGION # e.g., us-central1 - The location of your Artifact Registry
-  SERVICE_NAME: your-app-name # Replace with your Cloud Run service name (e.g., la-vie-app)
-  ARTIFACT_REGISTRY_REPO: your-artifact-registry-repo-name # Replace with your Artifact Registry repository name
-  IMAGE_NAME: your-image-name # Replace with your desired image name (e.g., la-vie-app)
+  GAR_LOCATION: us-central1 # The location of your Artifact Registry
+  SERVICE_NAME: bookings # Replace with your Cloud Run service name (e.g., la-vie-app)
+  ARTIFACT_REGISTRY_REPO: bookings-repo # Replace with your Artifact Registry repository name
+  IMAGE_NAME: bookings-app # Replace with your desired image name (e.g., la-vie-app)
 
 jobs:
   build-and-deploy:
@@ -95,7 +95,6 @@ jobs:
 # Before running:
 # - Ensure Artifact Registry API is enabled in your GCP project.
 # - Ensure Cloud Run API is enabled in your GCP project.
-# - Create an Artifact Registry repository named 'your-artifact-registry-repo-name' (or update the env var).
+# - Create an Artifact Registry repository named 'bookings-repo' (or update the env var) in 'us-central1'.
 # - Configure Workload Identity Federation between GitHub Actions and your GCP project, or create a service account with a key.
-# - Replace placeholders in this file (YOUR_REGION, your-app-name, etc.).
-# - Replace placeholders in cloudrun-service.yaml.
+# - Replace placeholders in cloudrun-service.yaml if using manual gcloud deployment.
