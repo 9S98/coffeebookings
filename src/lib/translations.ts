@@ -57,7 +57,6 @@ export const translations: AllTranslations = {
     close: "Close",
     bookingDetails: "Booking Details",
     pickDate: "Pick a date",
-    // Cup Category Labels
     cat10cups: "10 Cups",
     cat20cups: "20 Cups",
     cat30cups: "30 Cups",
@@ -72,7 +71,9 @@ export const translations: AllTranslations = {
     previous: "Previous",
     next: "Next",
     selectHour: "Select Hour",
-    selectMinute: "Select Minute"
+    selectMinute: "Select Minute",
+    allRightsReserved: "All rights reserved",
+    contactUs: "Contact Us"
   },
   ar: {
     appName: "لا في",
@@ -130,7 +131,6 @@ export const translations: AllTranslations = {
     close: "إغلاق",
     bookingDetails: "تفاصيل الحجز",
     pickDate: "اختر تاريخًا",
-    // Cup Category Labels
     cat10cups: "10 أكواب",
     cat20cups: "20 كوبًا",
     cat30cups: "30 كوبًا",
@@ -145,6 +145,8 @@ export const translations: AllTranslations = {
     previous: "السابق",
     next: "التالي",
     selectHour: "اختر الساعة",
-    selectMinute: "اختر الدقيقة"
+    selectMinute: "اختر الدقيقة",
+    allRightsReserved: "جميع الحقوق محفوظة",
+    contactUs: "اتصل بنا"
   },
 };
