@@ -1,4 +1,3 @@
-
 // src/lib/firebase.ts
 import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
 import { getFirestore, type Firestore } from 'firebase/firestore';
@@ -9,7 +8,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDqDQ13Wy_WT-vGyzkKCEd4hgMEyHb-zzo",
   authDomain: "coffeespot-booking.firebaseapp.com",
   projectId: "coffeespot-booking",
-  storageBucket: "coffeespot-booking.appspot.com", // Corrected from .firebasestorage.app to .appspot.com as per standard
+  storageBucket: "coffeespot-booking.appspot.com", // Standard Firebase storage bucket domain
   messagingSenderId: "442607128940",
   appId: "1:442607128940:web:d07d42a2329e0bb6f6e349"
 };
