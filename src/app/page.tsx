@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon, Users, Coffee, CalendarDays, Info, FileText, UploadCloud, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
+import { CalendarIcon, Users, Coffee, CalendarDays, Info, FileText, UploadCloud, MapPin, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
 
@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea'; // Assuming Textarea is available or use Input for address
+import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { SectionWrapper } from '@/components/shared/SectionWrapper';
 import { useToast } from "@/hooks/use-toast";
@@ -87,14 +87,12 @@ export default function BookingPage() {
           description: t('bookingConfirmationMessage'),
           action: <CheckCircle className="text-green-500" />,
         });
-        // Reset form and state
         form.reset();
         setSelectedGender(null);
         setSelectedCupCategory(null);
         setSelectedDate(undefined);
         setSelectedTimeSlot(null);
         setAgreementFile(null);
-        // Clear file input visually (if possible, browser dependent)
         const fileInput = document.getElementById('agreementFile') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
       } else {
@@ -136,7 +134,12 @@ export default function BookingPage() {
           <SectionWrapper titleKey="selectGender" icon={<Users className="h-6 w-6" />}>
             <RadioGroup
               defaultValue={selectedGender || undefined}
-              onValueChange={(value: Gender) => setSelectedGender(value)}
+              onValueChange={(value: Gender) => {
+                setSelectedGender(value);
+                setSelectedCupCategory(null); // Reset subsequent selections
+                setSelectedDate(undefined);
+                setSelectedTimeSlot(null);
+              }}
               className="flex gap-4"
               dir={dir}
             >
@@ -151,32 +154,39 @@ export default function BookingPage() {
             </RadioGroup>
           </SectionWrapper>
 
-          <SectionWrapper titleKey="selectCupCategory" icon={<Coffee className="h-6 w-6" />}>
-            <RadioGroup
-              onValueChange={(value) => setSelectedCupCategory(CUP_CATEGORIES.find(c => c.id === value) || null)}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
-              dir={dir}
-            >
-              {CUP_CATEGORIES.map(category => (
-                <div key={category.id}>
-                  <RadioGroupItem value={category.id} id={category.id} className="sr-only" />
-                  <Label
-                    htmlFor={category.id}
-                    className={cn(
-                      "flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer",
-                      selectedCupCategory?.id === category.id && "border-primary ring-2 ring-primary"
-                    )}
-                  >
-                    <span className="font-semibold">{t(category.labelKey)}</span>
-                    <span className="text-sm text-muted-foreground">{t('cupsLabel', { count: category.cups })}</span>
-                    <span className="text-xs text-muted-foreground">{t('durationLabel', { hours: category.durationHours })}</span>
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </SectionWrapper>
+          {selectedGender && (
+            <SectionWrapper titleKey="selectCupCategory" icon={<Coffee className="h-6 w-6" />}>
+              <RadioGroup
+                value={selectedCupCategory?.id || ""}
+                onValueChange={(value) => {
+                  setSelectedCupCategory(CUP_CATEGORIES.find(c => c.id === value) || null);
+                  setSelectedDate(undefined); // Reset subsequent selections
+                  setSelectedTimeSlot(null);
+                }}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+                dir={dir}
+              >
+                {CUP_CATEGORIES.map(category => (
+                  <div key={category.id}>
+                    <RadioGroupItem value={category.id} id={category.id} className="sr-only" />
+                    <Label
+                      htmlFor={category.id}
+                      className={cn(
+                        "flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer",
+                        selectedCupCategory?.id === category.id && "border-primary ring-2 ring-primary"
+                      )}
+                    >
+                      <span className="font-semibold">{t(category.labelKey)}</span>
+                      <span className="text-sm text-muted-foreground">{t('cupsLabel', { count: category.cups })}</span>
+                      <span className="text-xs text-muted-foreground">{t('durationLabel', { hours: category.durationHours })}</span>
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </SectionWrapper>
+          )}
 
-          {selectedCupCategory && (
+          {selectedGender && selectedCupCategory && (
             <SectionWrapper titleKey="selectDate" icon={<CalendarDays className="h-6 w-6" />}>
               <Popover>
                 <PopoverTrigger asChild>
@@ -197,7 +207,7 @@ export default function BookingPage() {
                     selected={selectedDate}
                     onSelect={(date) => { setSelectedDate(date); setSelectedTimeSlot(null); }}
                     initialFocus
-                    disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() -1))} // Disable past dates
+                    disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() -1))}
                     locale={dateLocale}
                     dir={dir}
                   />
@@ -206,8 +216,8 @@ export default function BookingPage() {
             </SectionWrapper>
           )}
           
-          {selectedDate && selectedCupCategory && (
-            <SectionWrapper titleKey="selectTimeSlot" icon={<CalendarIcon className="h-6 w-6" />}>
+          {selectedGender && selectedCupCategory && selectedDate && (
+            <SectionWrapper titleKey="selectTimeSlot" icon={<Clock className="h-6 w-6" />}>
               {availableTimeSlots.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {availableTimeSlots.map(slot => {
@@ -228,157 +238,161 @@ export default function BookingPage() {
                   )})}
                 </div>
               ) : (
-                <p className="text-muted-foreground">{t('noBookingsForDate')}</p> // Or "No available slots for this category/date"
+                <p className="text-muted-foreground text-center">{t('noBookingsForDate')}</p>
               )}
             </SectionWrapper>
           )}
 
-          <SectionWrapper titleKey="customerDetails" icon={<Info className="h-6 w-6" />}>
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('name')}</FormLabel>
-                    <FormControl>
-                      <Input placeholder={t('namePlaceholder')} {...field} />
-                    </FormControl>
-                    <FormMessage>{field.value && form.formState.errors.name ? t(form.formState.errors.name.message as string) : null}</FormMessage>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('phone')}</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder={t('phonePlaceholder')} {...field} />
-                    </FormControl>
-                    <FormMessage>{field.value && form.formState.errors.phone ? t(form.formState.errors.phone.message as string) : null}</FormMessage>
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('address')}</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder={t('addressPlaceholder')} {...field} />
-                    </FormControl>
-                     <FormMessage>{field.value && form.formState.errors.address ? t(form.formState.errors.address.message as string) : null}</FormMessage>
-                  </FormItem>
-                )}
-              />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="zone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('zone')}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t('zonePlaceholder')} {...field} />
-                      </FormControl>
-                      <FormMessage>{field.value && form.formState.errors.zone ? t(form.formState.errors.zone.message as string) : null}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="street"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('street')}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t('streetPlaceholder')} {...field} />
-                      </FormControl>
-                      <FormMessage>{field.value && form.formState.errors.street ? t(form.formState.errors.street.message as string) : null}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="buildingNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('buildingNumber')}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t('buildingNumberPlaceholder')} {...field} />
-                      </FormControl>
-                      <FormMessage>{field.value && form.formState.errors.buildingNumber ? t(form.formState.errors.buildingNumber.message as string) : null}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="unitNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('unitNumber')}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t('unitNumberPlaceholder')} {...field} />
-                      </FormControl>
-                       <FormMessage>{field.value && form.formState.errors.unitNumber ? t(form.formState.errors.unitNumber.message as string) : null}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="googleMapsLink"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel><MapPin className="inline h-4 w-4 mr-1"/>{t('googleMapsLink')}</FormLabel>
-                    <FormControl>
-                      <Input type="url" placeholder={t('googleMapsLinkPlaceholder')} {...field} />
-                    </FormControl>
-                    <FormMessage>{field.value && form.formState.errors.googleMapsLink ? t(form.formState.errors.googleMapsLink.message as string) : null}</FormMessage>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </SectionWrapper>
+          {selectedGender && selectedCupCategory && selectedDate && selectedTimeSlot && (
+            <>
+              <SectionWrapper titleKey="customerDetails" icon={<Info className="h-6 w-6" />}>
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('name')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('namePlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage>{field.value && form.formState.errors.name ? t(form.formState.errors.name.message as string) : null}</FormMessage>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('phone')}</FormLabel>
+                        <FormControl>
+                          <Input type="tel" placeholder={t('phonePlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage>{field.value && form.formState.errors.phone ? t(form.formState.errors.phone.message as string) : null}</FormMessage>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('address')}</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder={t('addressPlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage>{field.value && form.formState.errors.address ? t(form.formState.errors.address.message as string) : null}</FormMessage>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="zone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('zone')}</FormLabel>
+                          <FormControl>
+                            <Input placeholder={t('zonePlaceholder')} {...field} />
+                          </FormControl>
+                          <FormMessage>{field.value && form.formState.errors.zone ? t(form.formState.errors.zone.message as string) : null}</FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="street"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('street')}</FormLabel>
+                          <FormControl>
+                            <Input placeholder={t('streetPlaceholder')} {...field} />
+                          </FormControl>
+                          <FormMessage>{field.value && form.formState.errors.street ? t(form.formState.errors.street.message as string) : null}</FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="buildingNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('buildingNumber')}</FormLabel>
+                          <FormControl>
+                            <Input placeholder={t('buildingNumberPlaceholder')} {...field} />
+                          </FormControl>
+                          <FormMessage>{field.value && form.formState.errors.buildingNumber ? t(form.formState.errors.buildingNumber.message as string) : null}</FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="unitNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('unitNumber')}</FormLabel>
+                          <FormControl>
+                            <Input placeholder={t('unitNumberPlaceholder')} {...field} />
+                          </FormControl>
+                          <FormMessage>{field.value && form.formState.errors.unitNumber ? t(form.formState.errors.unitNumber.message as string) : null}</FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="googleMapsLink"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel><MapPin className="inline h-4 w-4 mr-1"/>{t('googleMapsLink')}</FormLabel>
+                        <FormControl>
+                          <Input type="url" placeholder={t('googleMapsLinkPlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage>{field.value && form.formState.errors.googleMapsLink ? t(form.formState.errors.googleMapsLink.message as string) : null}</FormMessage>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </SectionWrapper>
 
-          <SectionWrapper titleKey="agreement" icon={<FileText className="h-6 w-6" />}>
-            <p className="mb-2 text-sm text-muted-foreground">{t('agreementInstructions')}</p>
-            <div className="mb-4 p-2 border rounded-md" style={{ width: '100%', height: '150px' }}>
-              <iframe 
-                src={AGREEMENT_URL} 
-                width="100%" 
-                height="100%" 
-                frameBorder="0" 
-                scrolling="auto"
-                title="Agreement Document"
-              ></iframe>
-            </div>
-            <Button type="button" variant="outline" asChild className="mb-4">
-              <a href={AGREEMENT_URL} target="_blank" rel="noopener noreferrer">
-                {t('downloadAgreement')}
-              </a>
-            </Button>
-            
-            <FormItem>
-              <FormLabel htmlFor="agreementFile">{t('uploadSignedAgreement')}</FormLabel>
-              <FormControl>
-                <Input 
-                  id="agreementFile"
-                  type="file" 
-                  onChange={handleFileChange} 
-                  accept=".pdf,.doc,.docx,.jpg,.png" 
-                  className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                />
-              </FormControl>
-              {agreementFile && <p className="text-sm mt-2 text-green-600"><CheckCircle className="inline h-4 w-4 mr-1" />{t('agreementUploaded', {fileName: agreementFile.name})}</p>}
-              {!agreementFile && <p className="text-sm mt-2 text-muted-foreground">{t('noFileChosen')}</p>}
-            </FormItem>
-          </SectionWrapper>
+              <SectionWrapper titleKey="agreement" icon={<FileText className="h-6 w-6" />}>
+                <p className="mb-2 text-sm text-muted-foreground">{t('agreementInstructions')}</p>
+                <div className="mb-4 p-2 border rounded-md" style={{ width: '100%', height: '150px' }}>
+                  <iframe 
+                    src={AGREEMENT_URL} 
+                    width="100%" 
+                    height="100%" 
+                    frameBorder="0" 
+                    scrolling="auto"
+                    title="Agreement Document"
+                  ></iframe>
+                </div>
+                <Button type="button" variant="outline" asChild className="mb-4">
+                  <a href={AGREEMENT_URL} target="_blank" rel="noopener noreferrer">
+                    {t('downloadAgreement')}
+                  </a>
+                </Button>
+                
+                <FormItem>
+                  <FormLabel htmlFor="agreementFile">{t('uploadSignedAgreement')}</FormLabel>
+                  <FormControl>
+                    <Input 
+                      id="agreementFile"
+                      type="file" 
+                      onChange={handleFileChange} 
+                      accept=".pdf,.doc,.docx,.jpg,.png" 
+                      className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                    />
+                  </FormControl>
+                  {agreementFile && <p className="text-sm mt-2 text-green-600"><CheckCircle className="inline h-4 w-4 mr-1" />{t('agreementUploaded', {fileName: agreementFile.name})}</p>}
+                  {!agreementFile && <p className="text-sm mt-2 text-muted-foreground">{t('noFileChosen')}</p>}
+                </FormItem>
+              </SectionWrapper>
+            </>
+          )}
 
           <Button type="submit" size="lg" className="w-full text-lg" disabled={isBookingButtonDisabled}>
             {isSubmitting ? (
@@ -388,7 +402,9 @@ export default function BookingPage() {
             )}
           </Button>
           {isBookingButtonDisabled && !isSubmitting && (
-            <p className="text-sm text-destructive text-center mt-2">{t('fillRequiredFields')}</p>
+             (!selectedGender || !selectedCupCategory || !selectedDate || !selectedTimeSlot || !agreementFile) && (
+              <p className="text-sm text-destructive text-center mt-2">{t('fillRequiredFields')}</p>
+            )
           )}
         </form>
       </Form>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google'; // Using Inter as a general-purpose font
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import AppHeader from '@/components/AppHeader';
@@ -7,8 +7,8 @@ import AppHeader from '@/components/AppHeader';
 const inter = Inter({ subsets: ['latin', 'arabic'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'CoffeeSpot Booking',
-  description: 'Book your coffee experience',
+  title: 'LA VIE',
+  description: 'Your LA VIE Experience',
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="py-6 text-center text-sm text-muted-foreground">
-              © {new Date().getFullYear()} CoffeeSpot Booking. All rights reserved.
+              © {new Date().getFullYear()} LA VIE. All rights reserved.
             </footer>
           </div>
         </Providers>

@@ -2,7 +2,7 @@ import type { AllTranslations } from '@/types';
 
 export const translations: AllTranslations = {
   en: {
-    appName: "CoffeeSpot Booking",
+    appName: "LA VIE",
     navHome: "Home",
     navAdmin: "Admin",
     language: "Language",
@@ -11,7 +11,7 @@ export const translations: AllTranslations = {
     selectGender: "For whom is the booking?",
     men: "Men",
     women: "Women",
-    selectCupCategory: "Select Coffee Package",
+    selectCupCategory: "Select Package",
     cupsLabel: "{count} cups",
     durationLabel: "({hours} hours)",
     selectDate: "Select Date",
@@ -50,7 +50,7 @@ export const translations: AllTranslations = {
     bookingsForDate: "Bookings for {date}",
     noBookingsForDate: "No bookings for this date.",
     time: "Time",
-    category: "Category",
+    category: "Package",
     gender: "Gender",
     contact: "Contact",
     viewDetails: "View Details",
@@ -75,7 +75,7 @@ export const translations: AllTranslations = {
     selectMinute: "Select Minute"
   },
   ar: {
-    appName: "كوفي سبوت للحجوزات",
+    appName: "لا في",
     navHome: "الرئيسية",
     navAdmin: "الإدارة",
     language: "اللغة",
@@ -84,7 +84,7 @@ export const translations: AllTranslations = {
     selectGender: "لمن الحجز؟",
     men: "رجال",
     women: "نساء",
-    selectCupCategory: "اختر باقة القهوة",
+    selectCupCategory: "اختر الباقة",
     cupsLabel: "{count} أكواب",
     durationLabel: "({hours} ساعات)",
     selectDate: "اختر التاريخ",
