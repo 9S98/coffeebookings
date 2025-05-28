@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
-import { CalendarIcon, Users, Coffee, Clock, Phone, MapPin, Building, Home, Hash, LogOut } from 'lucide-react';
+import { CalendarIcon, Users, Coffee, Clock, Phone, MapPin, Building, Home, Hash, LogOut, FileText, Download } from 'lucide-react';
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useBooking } from '@/contexts/BookingContext';
@@ -29,7 +29,7 @@ const ADMIN_AUTH_KEY = 'laVieAdminAuthenticated';
 
 export default function AdminPage() {
   const { language, t, dir } = useLanguage();
-  const { bookings } = useBooking();
+  const { bookings, getBookingById } = useBooking(); // getBookingById might be useful if we need fresh data on dialog open
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,8 +37,6 @@ export default function AdminPage() {
 
 
   useEffect(() => {
-    // Check authentication status on mount from sessionStorage
-    // This effect should only run on the client
     if (typeof window !== 'undefined') {
       const authStatus = sessionStorage.getItem(ADMIN_AUTH_KEY);
       if (authStatus === 'true') {
@@ -67,18 +65,24 @@ export default function AdminPage() {
   const bookingsForSelectedDate = useMemo(() => {
     if (!selectedDate) return [];
     return bookings
-      .filter(booking => format(booking.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd'))
+      .filter(booking => {
+        // Ensure booking.date is a valid Date object before formatting
+        if (!(booking.date instanceof Date) || isNaN(booking.date.getTime())) {
+            // console.warn("Invalid date found in booking:", booking);
+            return false;
+        }
+        return format(booking.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+      })
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
   }, [selectedDate, bookings]);
 
   const bookedDays = useMemo(() => {
-    if (bookings.length === 0) return []; // Return empty array if no bookings to avoid error
-    const dates = bookings.map(booking => booking.date);
+    if (bookings.length === 0) return [];
+    const dates = bookings.map(booking => booking.date).filter(date => date instanceof Date && !isNaN(date.getTime()));
     return dates;
   }, [bookings]);
 
   if (isLoadingAuth) {
-    // Render a loading state or null while checking auth status on the client
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -89,6 +93,13 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
   }
+
+  const handleViewDetails = async (booking: Booking) => {
+    // Optionally re-fetch latest booking data if needed, or use the one from the list
+    // const freshBooking = await getBookingById(booking.id);
+    // setViewingBooking(freshBooking || booking);
+    setViewingBooking(booking);
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -155,7 +166,7 @@ export default function AdminPage() {
                           <p className="text-sm text-muted-foreground mb-3"><strong>{t('phone')}:</strong> {booking.customerPhone}</p>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" onClick={() => setViewingBooking(booking)}>
+                              <Button variant="outline" size="sm" onClick={() => handleViewDetails(booking)}>
                                 {t('viewDetails')}
                               </Button>
                             </DialogTrigger>
@@ -184,10 +195,29 @@ export default function AdminPage() {
                                     <Home className="h-4 w-4 text-muted-foreground"/><span><strong>{t('street')}:</strong> {viewingBooking.street}</span>
                                     <Building className="h-4 w-4 text-muted-foreground"/><span><strong>{t('buildingNumber')}:</strong> {viewingBooking.buildingNumber}</span>
                                     {viewingBooking.unitNumber && <><Hash className="h-4 w-4 text-muted-foreground"/><span><strong>{t('unitNumber')}:</strong> {viewingBooking.unitNumber}</span></>}
-                                    {viewingBooking.googleMapsLink && <><MapPin className="h-4 w-4 text-muted-foreground" /><span><strong>{t('googleMapsLink')}:</strong> <a href={viewingBooking.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-primary underline">{t('googleMapsLink')}</a></span></>}
+                                    {viewingBooking.googleMapsLink && <><MapPin className="h-4 w-4 text-muted-foreground" /><span><strong>{t('googleMapsLink')}:</strong> <a href={viewingBooking.googleMapsLink} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">{t('openLink')}</a></span></>}
                                   </div>
                                   <Separator />
-                                  <p><strong>{t('agreement')}:</strong> {viewingBooking.agreementFileName || t('noFileChosen')}</p>
+                                  <h3 className="font-semibold mt-2">{t('agreement')}</h3>
+                                  <div className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2">
+                                     <FileText className="h-4 w-4 text-muted-foreground" />
+                                     {viewingBooking.agreementFileUrl ? (
+                                        <a href={viewingBooking.agreementFileUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80 flex items-center gap-1">
+                                          {viewingBooking.agreementFileName || t('viewAgreement')}
+                                          <Download className="h-3 w-3" />
+                                        </a>
+                                      ) : (
+                                        <span>{t('noFileChosen')}</span>
+                                      )}
+                                  </div>
+                                   {viewingBooking.createdAt && (
+                                    <>
+                                      <Separator />
+                                      <p className="text-xs text-muted-foreground mt-2">
+                                        {t('bookingCreatedAt')}: {format(viewingBooking.createdAt, 'Pp', { locale: dateLocale })}
+                                      </p>
+                                    </>
+                                  )}
                                 </div>
                               )}
                                <DialogClose asChild>
@@ -212,5 +242,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
-    

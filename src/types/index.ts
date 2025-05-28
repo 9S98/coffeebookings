@@ -1,3 +1,4 @@
+
 import type { z } from 'zod';
 import type { bookingFormSchema } from '@/lib/schemas';
 
@@ -9,17 +10,17 @@ export interface CupCategory {
   id: string;
   labelKey: string;
   cups: number;
-  durationHours: number; 
+  durationHours: number;
 }
 
 export interface TimeSlotData {
-  startTime: string; 
-  endTime: string; 
+  startTime: string;
+  endTime: string;
 }
 
 export interface Booking {
-  id: string;
-  date: Date;
+  id: string; // Firestore document ID
+  date: Date; // JS Date object (converted from Firestore Timestamp)
   startTime: string; // HH:mm
   endTime: string; // HH:mm
   gender: Gender;
@@ -32,7 +33,10 @@ export interface Booking {
   buildingNumber: string;
   unitNumber?: string;
   googleMapsLink?: string;
-  agreementFileName?: string;
+  agreementFileName: string;
+  agreementFileUrl: string;  // URL to view/download from Storage
+  agreementFilePath: string; // Path in Firebase Storage, e.g., agreements/bookingId/fileName.pdf
+  createdAt?: Date; // JS Date object (converted from Firestore Timestamp)
 }
 
 export type BookingFormData = z.infer<typeof bookingFormSchema>;

@@ -9,7 +9,7 @@ export const translations: AllTranslations = {
     language: "Language",
     english: "English",
     arabic: "Arabic",
-    selectGender: "Choose your booking",
+    selectGender: "Choose your booking", // Updated
     men: "Men",
     women: "Women",
     selectCupCategory: "Select Package",
@@ -84,7 +84,10 @@ export const translations: AllTranslations = {
     showPassword: "Show password",
     hidePassword: "Hide password",
     importantAgreementTitle: "Important: Agreement Required",
-    importantAgreementMessage: "THE AGREEMENT HAS TO BE SIGNED AND UPLOADED OTHERWISE THE BOOKING WILL BE CANCELED AUTOMATICALLY AND THE BOOKING FEE WILL NOT BE REFUNDED."
+    importantAgreementMessage: "THE AGREEMENT HAS TO BE SIGNED AND UPLOADED OTHERWISE THE BOOKING WILL BE CANCELED AUTOMATICALLY AND THE BOOKING FEE WILL NOT BE REFUNDED.",
+    viewAgreement: "View Agreement",
+    openLink: "Open Link",
+    bookingCreatedAt: "Booking created at"
   },
   ar: {
     appName: "لا في",
@@ -93,7 +96,7 @@ export const translations: AllTranslations = {
     language: "اللغة",
     english: "الإنجليزية",
     arabic: "العربية",
-    selectGender: "اختر نوع الحجز",
+    selectGender: "اختر نوع الحجز", // Updated
     men: "رجال",
     women: "نساء",
     selectCupCategory: "اختر الباقة",
@@ -168,6 +171,9 @@ export const translations: AllTranslations = {
     showPassword: "إظهار كلمة المرور",
     hidePassword: "إخفاء كلمة المرور",
     importantAgreementTitle: "هام: الاتفاقية مطلوبة",
-    importantAgreementMessage: "يجب توقيع الاتفاقية وتحميلها وإلا سيتم إلغاء الحجز تلقائيًا ولن يتم استرداد رسوم الحجز."
+    importantAgreementMessage: "يجب توقيع الاتفاقية وتحميلها وإلا سيتم إلغاء الحجز تلقائيًا ولن يتم استرداد رسوم الحجز.",
+    viewAgreement: "عرض الاتفاقية",
+    openLink: "فتح الرابط",
+    bookingCreatedAt: "تم إنشاء الحجز في"
   },
 };
