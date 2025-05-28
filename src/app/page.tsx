@@ -1,9 +1,10 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon, Users, Coffee, CalendarDays, Info, FileText, UploadCloud, MapPin, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { CalendarIcon, Users, Coffee, CalendarDays, Info, FileText, UploadCloud, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
 
@@ -21,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { SectionWrapper } from '@/components/shared/SectionWrapper';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
@@ -359,6 +361,13 @@ export default function BookingPage() {
               </SectionWrapper>
 
               <SectionWrapper titleKey="agreement" icon={<FileText className="h-6 w-6" />}>
+                <Alert variant="destructive" className="mb-4">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>{t('importantAgreementTitle')}</AlertTitle>
+                  <AlertDescription>
+                    {t('importantAgreementMessage')}
+                  </AlertDescription>
+                </Alert>
                 <p className="mb-2 text-sm text-muted-foreground">{t('agreementInstructions')}</p>
                 <div className="mb-4 p-2 border rounded-md" style={{ width: '100%', height: '150px' }}>
                   <iframe 

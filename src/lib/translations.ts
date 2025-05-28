@@ -83,6 +83,8 @@ export const translations: AllTranslations = {
     incorrectPassword: "Incorrect password. Please try again.",
     showPassword: "Show password",
     hidePassword: "Hide password",
+    importantAgreementTitle: "Important: Agreement Required",
+    importantAgreementMessage: "THE AGREEMENT HAS TO BE SIGNED AND UPLOADED OTHERWISE THE BOOKING WILL BE CANCELED AUTOMATICALLY AND THE BOOKING FEE WILL NOT BE REFUNDED."
   },
   ar: {
     appName: "لا في",
@@ -165,5 +167,7 @@ export const translations: AllTranslations = {
     incorrectPassword: "كلمة مرور غير صحيحة. يرجى المحاولة مرة أخرى.",
     showPassword: "إظهار كلمة المرور",
     hidePassword: "إخفاء كلمة المرور",
+    importantAgreementTitle: "هام: الاتفاقية مطلوبة",
+    importantAgreementMessage: "يجب توقيع الاتفاقية وتحميلها وإلا سيتم إلغاء الحجز تلقائيًا ولن يتم استرداد رسوم الحجز."
   },
 };
