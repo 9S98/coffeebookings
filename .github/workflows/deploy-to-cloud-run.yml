@@ -55,20 +55,28 @@ jobs:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.GAR_LOCATION }} # Ensure this is the region for your Cloud Run service
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          # To use the cloudrun-service.yaml, you would typically use gcloud run services replace cloudrun-service.yaml
-          # This action uses direct parameters, but you can adapt it or use a gcloud run deploy step:
-          # The following 'run' block was previously commented and might have caused syntax issues if not properly terminated or if indentation was off.
-          # It's removed here as the primary deployment method is 'google-github-actions/deploy-cloudrun@v2'.
-          # If you intend to use gcloud directly, ensure its syntax is correct and it's properly un-commented.
-          # Example for direct gcloud deployment (ensure this is what you want if uncommenting):
+          # Optional: To use environment variables stored as GitHub secrets
+          # env_vars: |
+          #   NODE_ENV=production
+          #   API_KEY=${{ secrets.MY_API_KEY }}
+          #   ANOTHER_VAR=some_value
+          #
+          # Optional: To allow unauthenticated access (make sure this is intended)
+          # allow_unauthenticated: true
+          #
+          # Optional: Platform (managed is default, can be gke)
+          # platform: managed
+          #
+          # For more complex configurations or if you prefer using a service.yaml:
+          # You might use a gcloud command directly in a 'run' step instead of this action,
+          # for example:
           # run: |
           #   gcloud run deploy ${{ env.SERVICE_NAME }} \
           #     --image ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
           #     --region ${{ env.GAR_LOCATION }} \
           #     --platform managed \
-          #     --allow-unauthenticated # Or configure IAM for authentication
+          #     --allow-unauthenticated \ # Or configure IAM for authentication
           #     --project ${{ env.PROJECT_ID }}
-          #     # Add other flags as needed, e.g., --env-vars, --min-instances, --max-instances
           #     # Consider using the service.yaml definition for more complex configurations:
           #     # gcloud run services replace cloudrun-service.yaml --region ${{ env.GAR_LOCATION }} --project ${{ env.PROJECT_ID }}
           #     # (You would need to substitute variables in cloudrun-service.yaml or manage it separately)
@@ -100,4 +108,4 @@ jobs:
 # - Ensure Cloud Run API is enabled in your GCP project.
 # - Create an Artifact Registry repository named (as per env vars) in the specified GAR_LOCATION.
 # - Configure Workload Identity Federation between GitHub Actions and your GCP project, or create a service account with a key.
-# - Replace placeholders in cloudrun-service.yaml if using manual gcloud deployment with it.
+# - If using a service.yaml for deployment via gcloud commands, ensure it's correctly configured.
