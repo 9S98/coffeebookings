@@ -31,7 +31,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # User: Ensure this secret points to projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # User: Ensure this secret is the email of the SA in project 182184842256 (or the relevant project)
-          audience: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # Explicitly set audience to the WIF provider's IAM resource name
+          audience: 'https://iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicitly set audience
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
