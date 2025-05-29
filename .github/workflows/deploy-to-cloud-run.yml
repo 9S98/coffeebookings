@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # User: Ensure this secret is 'coffeespot-booking'
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # User: Ensure this secret is 'coffeespot-booking' (or the project ID for 182184842256)
   GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
   SERVICE_NAME: coffeespot-booking-service # Name of your Cloud Run service
   ARTIFACT_REGISTRY_REPO: coffeespot-booking-repo # Name of your Artifact Registry repository
@@ -29,9 +29,9 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # User: Ensure this secret points to your new WIF provider (e.g., projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID)
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # User: Ensure this secret is the email of the SA in project 182184842256
-          audience: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # Explicitly set audience
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # User: Ensure this secret points to projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # User: Ensure this secret is the email of the SA in project 182184842256 (or the relevant project)
+          # audience parameter removed to let the action derive it or use its default.
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
