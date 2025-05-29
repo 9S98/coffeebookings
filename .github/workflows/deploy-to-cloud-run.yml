@@ -7,11 +7,11 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # User: Ensure this secret is 'coffeespot-booking'
   GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
-  SERVICE_NAME: bookings # Name of your Cloud Run service
-  ARTIFACT_REGISTRY_REPO: bookings-repo # Name of your Artifact Registry repository
-  IMAGE_NAME: bookings-app # Name of your Docker image
+  SERVICE_NAME: coffeespot-booking-service # Name of your Cloud Run service
+  ARTIFACT_REGISTRY_REPO: coffeespot-booking-repo # Name of your Artifact Registry repository
+  IMAGE_NAME: coffeespot-booking-app # Name of your Docker image
 
 jobs:
   build-and-deploy:
@@ -29,8 +29,8 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # User: Ensure this secret points to your new WIF provider (e.g., projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID)
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # User: Ensure this secret is the email of the SA in project 182184842256
           audience: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # Explicitly set audience
 
       - name: Set up Cloud SDK
@@ -73,9 +73,10 @@ jobs:
         run: echo "Deployment URL will appear here." 
 
 # How to set up GitHub Secrets:
-# 1. GCP_PROJECT_ID: Your Google Cloud Project ID.
+# 1. GCP_PROJECT_ID: Your Google Cloud Project ID (e.g., coffeespot-booking).
 # 2. GCP_WORKLOAD_IDENTITY_PROVIDER: The full identifier of your Workload Identity Provider.
-#    Format: projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/YOUR_POOL_ID/providers/YOUR_PROVIDER_ID
+#    Format: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID
+#    (e.g., projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID)
 # 3. GCP_SERVICE_ACCOUNT: The email address of the Google Cloud Service Account that GitHub Actions will impersonate.
 #    This service account needs roles like:
 #    - Artifact Registry Writer (roles/artifactregistry.writer) - to push images
@@ -83,7 +84,8 @@ jobs:
 #    - Service Account User (roles/iam.serviceAccountUser) - to impersonate this service account
 #
 # Before running:
-# - Ensure Artifact Registry API is enabled in your GCP project.
-# - Ensure Cloud Run API is enabled in your GCP project.
-# - Create an Artifact Registry repository named bookings-repo (as per env vars) in the specified GAR_LOCATION (us-central1).
-# - Configure Workload Identity Federation between GitHub Actions and your GCP project.
+# - Ensure Artifact Registry API is enabled in your GCP project (e.g., coffeespot-booking).
+# - Ensure Cloud Run API is enabled in your GCP project (e.g., coffeespot-booking).
+# - Create an Artifact Registry repository named as per ARTIFACT_REGISTRY_REPO (e.g., coffeespot-booking-repo) in the specified GAR_LOCATION (us-central1).
+# - Configure Workload Identity Federation between GitHub Actions and your GCP project (project 182184842256 for the WIF pool).
+# - Ensure the service account has the "Workload Identity User" role for the principalSet from your WIF provider.
