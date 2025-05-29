@@ -1,56 +1,56 @@
-# Dockerfile
+# Use an official Node.js runtime as a parent image
+# Using a specific version of Node.js (e.g., Node 20 LTS - Iron)
+FROM node:20-slim AS base
 
-# 1. Install dependencies
-# Use Node.js 20 Alpine as a base image for smaller size
-FROM node:20-alpine AS deps
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
-COPY package.json package-lock.json* ./
-# Install dependencies using npm ci for faster, more reliable builds
-RUN npm ci
+# Install pnpm globally
+RUN npm install -g pnpm
 
-# 2. Build application
-FROM node:20-alpine AS builder
-WORKDIR /app
+# --- Dependencies ---
+FROM base AS deps
+# Copy package.json and pnpm-lock.yaml (if you use pnpm)
+# The trailing '*' on pnpm-lock.yaml makes it optional if the file doesn't exist,
+# but it's highly recommended to commit this file to your repository.
+COPY package.json pnpm-lock.yaml* ./
+# Install app dependencies using pnpm
+# --prod=false ensures devDependencies (needed for build) are installed
+RUN pnpm install --frozen-lockfile --prod=false
+
+# --- Builder ---
+FROM base AS builder
 # Copy dependencies from the 'deps' stage
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/node_modules /app/node_modules
 # Copy the rest of the application code
 COPY . .
-
 # Build the Next.js application
-RUN npm run build
+# The standalone output mode is handled by next.config.js,
+# so the standard build command is used.
+RUN pnpm build
 
-# 3. Production image
-FROM node:20-alpine AS runner
+# --- Runner ---
+FROM base AS runner
+# Set the working directory
 WORKDIR /app
 
-ENV NODE_ENV production
-# Disable Next.js telemetry during runtime
-ENV NEXT_TELEMETRY_DISABLED 1
+# Set environment variables
+# The PORT environment variable is used by Next.js to start the server on a specific port.
+# Cloud Run automatically sets this to 8080, but it's good practice to have it.
+ENV NODE_ENV=production
+# PORT is automatically set by Cloud Run. If running locally with Docker, you'd map this.
+# ENV PORT=3000 (Cloud Run will override this with 8080 by default)
 
-# Create a non-root user for security
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy public assets
+# Copy the standalone Next.js output from the builder stage
+# This includes the .next/standalone folder and the public and .next/static folders
+COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/static ./.next/static
 
-# Copy standalone Next.js output
-# This includes only the necessary files for running the app
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Set the user to the non-root user
-USER nextjs
-
-# Expose port 3000 (default for Next.js production server)
+# Expose the port the app runs on (Next.js default is 3000, Cloud Run default is 8080)
+# Cloud Run will use the PORT env var set by its environment.
 EXPOSE 3000
 
-# Set the port environment variable (Next.js will pick this up)
-ENV PORT 3000
-# Set hostname to allow connections from outside the container
-ENV HOSTNAME "0.0.0.0"
-
-# Command to run the Next.js server
+# The command to run when the container starts
+# This uses the server.js file from the standalone output.
 CMD ["node", "server.js"]
