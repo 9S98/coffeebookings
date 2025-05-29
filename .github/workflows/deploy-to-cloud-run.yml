@@ -31,7 +31,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # User: Ensure this secret points to projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # User: Ensure this secret is the email of the SA in project 182184842256 (or the relevant project)
-          # audience parameter removed to let the action derive it or use its default.
+          audience: 'https://iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -89,3 +89,5 @@ jobs:
 # - Create an Artifact Registry repository named as per ARTIFACT_REGISTRY_REPO (e.g., coffeespot-booking-repo) in the specified GAR_LOCATION (us-central1).
 # - Configure Workload Identity Federation between GitHub Actions and your GCP project (project 182184842256 for the WIF pool).
 # - Ensure the service account has the "Workload Identity User" role for the principalSet from your WIF provider.
+#   (e.g., principalSet://iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/subject/SUBJECT_ATTRIBUTE_VALUE or /attribute.repository/YOUR_GITHUB_OWNER/YOUR_GITHUB_REPO)
+```
