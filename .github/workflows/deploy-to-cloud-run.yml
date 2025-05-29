@@ -7,11 +7,11 @@ on:
       - main # Or your default branch, e.g., master
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Your Google Cloud Project ID
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GAR_LOCATION: us-central1 # The location of your Artifact Registry
-  SERVICE_NAME: bookings # Replace with your Cloud Run service name (e.g., la-vie-app)
+  SERVICE_NAME: bookings # Replace with your Cloud Run service name
   ARTIFACT_REGISTRY_REPO: bookings-repo # Replace with your Artifact Registry repository name
-  IMAGE_NAME: bookings-app # Replace with your desired image name (e.g., la-vie-app)
+  IMAGE_NAME: bookings-app # Replace with your desired image name
 
 jobs:
   build-and-deploy:
@@ -57,18 +57,21 @@ jobs:
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           # To use the cloudrun-service.yaml, you would typically use gcloud run services replace cloudrun-service.yaml
           # This action uses direct parameters, but you can adapt it or use a gcloud run deploy step:
-          # - name: Deploy to Cloud Run using gcloud
-          #   run: |
-          #     gcloud run deploy ${{ env.SERVICE_NAME }} \
-          #       --image ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-          #       --region ${{ env.GAR_LOCATION }} \
-          #       --platform managed \
-          #       --allow-unauthenticated # Or configure IAM for authentication
-          #       --project ${{ env.PROJECT_ID }}
-          #       # Add other flags as needed, e.g., --env-vars, --min-instances, --max-instances
-          #       # Consider using the service.yaml definition for more complex configurations:
-          #       # gcloud run services replace cloudrun-service.yaml --region ${{ env.GAR_LOCATION }} --project ${{ env.PROJECT_ID }}
-          #       # (You would need to substitute variables in cloudrun-service.yaml or manage it separately)
+          # The following 'run' block was previously commented and might have caused syntax issues if not properly terminated or if indentation was off.
+          # It's removed here as the primary deployment method is 'google-github-actions/deploy-cloudrun@v2'.
+          # If you intend to use gcloud directly, ensure its syntax is correct and it's properly un-commented.
+          # Example for direct gcloud deployment (ensure this is what you want if uncommenting):
+          # run: |
+          #   gcloud run deploy ${{ env.SERVICE_NAME }} \
+          #     --image ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          #     --region ${{ env.GAR_LOCATION }} \
+          #     --platform managed \
+          #     --allow-unauthenticated # Or configure IAM for authentication
+          #     --project ${{ env.PROJECT_ID }}
+          #     # Add other flags as needed, e.g., --env-vars, --min-instances, --max-instances
+          #     # Consider using the service.yaml definition for more complex configurations:
+          #     # gcloud run services replace cloudrun-service.yaml --region ${{ env.GAR_LOCATION }} --project ${{ env.PROJECT_ID }}
+          #     # (You would need to substitute variables in cloudrun-service.yaml or manage it separately)
 
       - name: Show Deployed URL
         run: echo "Deployed to: ${{ steps.deploy.outputs.url }}"
@@ -95,6 +98,6 @@ jobs:
 # Before running:
 # - Ensure Artifact Registry API is enabled in your GCP project.
 # - Ensure Cloud Run API is enabled in your GCP project.
-# - Create an Artifact Registry repository named 'bookings-repo' (or update the env var) in 'us-central1'.
+# - Create an Artifact Registry repository named (as per env vars) in the specified GAR_LOCATION.
 # - Configure Workload Identity Federation between GitHub Actions and your GCP project, or create a service account with a key.
-# - Replace placeholders in cloudrun-service.yaml if using manual gcloud deployment.
+# - Replace placeholders in cloudrun-service.yaml if using manual gcloud deployment with it.
