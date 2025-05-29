@@ -4,14 +4,14 @@ name: Build and Deploy to Google Cloud Run
 on:
   push:
     branches:
-      - main # Or your default branch, e.g., master
+      - main
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GAR_LOCATION: us-central1 # The location of your Artifact Registry
-  SERVICE_NAME: bookings # Replace with your Cloud Run service name
-  ARTIFACT_REGISTRY_REPO: bookings-repo # Replace with your Artifact Registry repository name
-  IMAGE_NAME: bookings-app # Replace with your desired image name
+  GAR_LOCATION: us-central1
+  SERVICE_NAME: bookings
+  ARTIFACT_REGISTRY_REPO: bookings-repo
+  IMAGE_NAME: bookings-app
 
 jobs:
   build-and-deploy:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
-      id-token: 'write' # Required for Workload Identity Federation
+      id-token: 'write'
 
     steps:
       - name: Checkout code
@@ -69,18 +69,8 @@ jobs:
 #    - Cloud Run Developer (roles/run.developer) - to deploy services
 #    - Service Account User (roles/iam.serviceAccountUser) - to impersonate this service account
 #
-# Alternative (less secure, if Workload Identity Federation is not set up):
-#    GCP_SA_KEY: The JSON key of a Google Cloud Service Account.
-#    If using GCP_SA_KEY, change the 'Google Auth' step to:
-#    - name: Google Auth
-#      id: auth
-#      uses: 'google-github-actions/auth@v2'
-#      with:
-#        credentials_json: '${{ secrets.GCP_SA_KEY }}'
-#
 # Before running:
 # - Ensure Artifact Registry API is enabled in your GCP project.
 # - Ensure Cloud Run API is enabled in your GCP project.
 # - Create an Artifact Registry repository named (as per env vars) in the specified GAR_LOCATION.
-# - Configure Workload Identity Federation between GitHub Actions and your GCP project, or create a service account with a key.
-# - If using a service.yaml for deployment via gcloud commands, ensure it's correctly configured.
+# - Configure Workload Identity Federation between GitHub Actions and your GCP project.
