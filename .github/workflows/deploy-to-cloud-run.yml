@@ -8,10 +8,10 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
-  SERVICE_NAME: bookings # Name of your Cloud Run service
-  ARTIFACT_REGISTRY_REPO: bookings-repo # Name of your Artifact Registry repository
-  IMAGE_NAME: bookings-app # Name of your Docker image
+  GAR_LOCATION: us-central1 
+  SERVICE_NAME: bookings 
+  ARTIFACT_REGISTRY_REPO: bookings-repo 
+  IMAGE_NAME: bookings-app 
 
 jobs:
   build-and-deploy:
@@ -57,13 +57,9 @@ jobs:
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           platform: managed
           allow_unauthenticated: true
-          # env_vars are not set in this example but would go here if needed:
-          # env_vars: |
-          #   NODE_ENV=production
-          #   API_KEY=${{ secrets.MY_API_KEY }}
 
-    - name: Show Deployed URL
-      run: echo "Deployed to: ${{ steps.deploy.outputs.url }}"
+      - name: Show Deployed URL Test # Line 59 (approx)
+        run: echo "Deployment URL will appear here." # Line 60 (approx) - Simplified run command
 
 # How to set up GitHub Secrets:
 # 1. GCP_PROJECT_ID: Your Google Cloud Project ID.
