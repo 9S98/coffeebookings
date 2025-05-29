@@ -8,10 +8,10 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GAR_LOCATION: us-central1
-  SERVICE_NAME: bookings
-  ARTIFACT_REGISTRY_REPO: bookings-repo
-  IMAGE_NAME: bookings-app
+  GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
+  SERVICE_NAME: bookings # Name of your Cloud Run service
+  ARTIFACT_REGISTRY_REPO: bookings-repo # Name of your Artifact Registry repository
+  IMAGE_NAME: bookings-app # Name of your Docker image
 
 jobs:
   build-and-deploy:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
-      id-token: 'write'
+      id-token: 'write' # Required for Workload Identity Federation
 
     steps:
       - name: Checkout code
@@ -55,6 +55,12 @@ jobs:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.GAR_LOCATION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          platform: managed # Specify the platform (managed or gke)
+          allow_unauthenticated: true # Set to true to allow public access, false for private
+          # Add other configurations as needed, e.g., environment variables:
+          # env_vars: |
+          #   NODE_ENV=production
+          #   MY_VARIABLE=${{ secrets.MY_REPO_SECRET }}
 
       - name: Show Deployed URL
         run: echo "Deployed to: ${{ steps.deploy.outputs.url }}"
