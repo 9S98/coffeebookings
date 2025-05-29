@@ -31,7 +31,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # User: Ensure this secret points to projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # User: Ensure this secret is the email of the SA in project 182184842256 (or the relevant project)
-          audience: 'https://iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicitly set audience
+          audience: 'https://iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # User: Double check this audience value matches your WIF provider's default audience if not using specific allowed audiences
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -58,16 +58,14 @@ jobs:
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           platform: managed
           allow_unauthenticated: true
-          # Add any other Cloud Run specific flags here, for example:
-          # memory: "512Mi"
-          # cpu: "1"
-          # timeout: "300s"
-          # concurrency: "80"
-          # min-instances: "0"
-          # max-instances: "2"
-          # env_vars: |
-          #   NODE_ENV=production
-          #   YOUR_OTHER_VARIABLE=${{ secrets.YOUR_OTHER_SECRET }}
+          env_vars: |
+            NODE_ENV=production
+            NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+            NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+            NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+            NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
 
       - name: Show Deployed URL Test
         run: echo "Deployment URL will appear here."
