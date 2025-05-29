@@ -48,7 +48,7 @@ jobs:
           docker push ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:latest
 
-      - name: Deploy to Cloud Run # This is likely around line 60
+      - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
@@ -57,13 +57,13 @@ jobs:
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           platform: managed
           allow_unauthenticated: true
-          # To pass environment variables (replace with your actual variables and secrets):
+          # env_vars are not set in this example but would go here if needed:
           # env_vars: |
           #   NODE_ENV=production
           #   API_KEY=${{ secrets.MY_API_KEY }}
 
-      - name: Show Deployed URL
-        run: echo "Deployed to: ${{ steps.deploy.outputs.url }}"
+    - name: Show Deployed URL
+      run: echo "Deployed to: ${{ steps.deploy.outputs.url }}"
 
 # How to set up GitHub Secrets:
 # 1. GCP_PROJECT_ID: Your Google Cloud Project ID.
