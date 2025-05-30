@@ -1,62 +1,49 @@
 # Stage 1: Install dependencies and build the application
 FROM node:20-slim AS base
+
+# Install pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# Declare build arguments that will be passed from the docker build command
-ARG NEXT_PUBLIC_FIREBASE_API_KEY
-ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
-ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-ARG NEXT_PUBLIC_FIREBASE_APP_ID
-
-# Make them available as environment variables during the build stage
-ENV NEXT_PUBLIC_FIREBASE_API_KEY=$NEXT_PUBLIC_FIREBASE_API_KEY
-ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=$NEXT_PUBLIC_FIREBASE_PROJECT_ID
-ENV NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=$NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-ENV NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-ENV NEXT_PUBLIC_FIREBASE_APP_ID=$NEXT_PUBLIC_FIREBASE_APP_ID
-
 WORKDIR /app
 
 # Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml* ./
 
-# Install dependencies
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# Install dependencies using pnpm --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
 
-# Build the application
-# NEXT_PUBLIC_ variables are now available from the ENV declarations above
+# Build the Next.js application
+# NEXT_PUBLIC_ variables for client-side code need to be available at build time
+# For server-side env vars, they'd be set in the Cloud Run environment directly.
 RUN pnpm build
 
-# Stage 2: Create the production image
+# Stage 2: Create the production image from the standalone output
 FROM node:20-slim AS runner
 WORKDIR /app
 
+# Set NODE_ENV to production
 ENV NODE_ENV production
-# ENV NEXT_TELEMETRY_DISABLED 1 # Uncomment to disable telemetry
+# Optionally, uncomment the line below to disable Next.js telemetry
+# ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy only necessary files from the build stage
-COPY --from=base /app/next.config.ts ./
+# Copy the standalone output from the build stage
+COPY --from=base /app/.next/standalone ./
+# Copy the public directory
 COPY --from=base /app/public ./public
-COPY --from=base /app/package.json ./package.json
-
-# Next.js standalone output requires a specific structure
-# Copy the standalone folder
-COPY --from=base --chown=nodejs:nodejs /app/.next/standalone ./
-# Copy the static assets from .next/static (if any)
-COPY --from=base --chown=nodejs:nodejs /app/.next/static ./.next/static
-
-USER nodejs
+# Copy the .next/static directory for static assets
+COPY --from=base /app/.next/static ./.next/static
 
 EXPOSE 3000
-ENV PORT 3000
-# ENV HOSTNAME "0.0.0.0" # Uncomment to listen on all interfaces for container health checks if needed
 
+ENV PORT 3000
+# HOSTNAME is needed for Next.js to bind to all network interfaces
+ENV HOSTNAME "0.0.0.0"
+
+# Start the Next.js application
+# The standalone output uses server.js by default
 CMD ["node", "server.js"]
