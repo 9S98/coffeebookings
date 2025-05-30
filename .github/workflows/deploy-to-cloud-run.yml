@@ -7,7 +7,7 @@ on:
       - main # Or your main branch
 
 env:
-  GCP_PROJECT_ID: coffeespot-booking-461302 # Project ID for resources
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Should be 'coffeespot-booking-461302'
   GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
   SERVICE_NAME: coffeespot-booking-service # Name of your Cloud Run service
   ARTIFACT_REGISTRY_REPO: coffeespot-booking-repo # Name of your Artifact Registry repository
@@ -28,10 +28,9 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }} # e.g., projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }} # Should be 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
           service_account: 'bookings-github-actions-deploy@coffeespot-booking-461302.iam.gserviceaccount.com'
-          # Explicitly set the audience to the IAM resource name of the WIF provider
-          audience: 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Assuming 'github-actions-provider' is your OIDC Provider ID
+          audience: 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicitly set audience
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
@@ -68,3 +67,4 @@ jobs:
 
       - name: Show Deployed URL Test
         run: echo "Deployment URL will appear here (once steps.deploy.outputs.url is confirmed working)."
+
