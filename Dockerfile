@@ -1,56 +1,62 @@
-# Use an official Node.js runtime as a parent image
-# Using a specific version of Node.js (e.g., Node 20 LTS - Iron)
+# Stage 1: Install dependencies and build the application
 FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-# Set the working directory in the container
+# Declare build arguments that will be passed from the docker build command
+ARG NEXT_PUBLIC_FIREBASE_API_KEY
+ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
+ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+ARG NEXT_PUBLIC_FIREBASE_APP_ID
+
+# Make them available as environment variables during the build stage
+ENV NEXT_PUBLIC_FIREBASE_API_KEY=$NEXT_PUBLIC_FIREBASE_API_KEY
+ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=$NEXT_PUBLIC_FIREBASE_PROJECT_ID
+ENV NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=$NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+ENV NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+ENV NEXT_PUBLIC_FIREBASE_APP_ID=$NEXT_PUBLIC_FIREBASE_APP_ID
+
 WORKDIR /app
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-# --- Dependencies ---
-FROM base AS deps
-# Copy package.json and pnpm-lock.yaml (if you use pnpm)
-# The trailing '*' on pnpm-lock.yaml makes it optional if the file doesn't exist,
-# but it's highly recommended to commit this file to your repository.
-COPY package.json pnpm-lock.yaml* ./
-# Install app dependencies using pnpm
-# --prod=false ensures devDependencies (needed for build) are installed
-RUN pnpm install --frozen-lockfile --prod=false
+# Install dependencies
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-# --- Builder ---
-FROM base AS builder
-# Copy dependencies from the 'deps' stage
-COPY --from=deps /app/node_modules /app/node_modules
 # Copy the rest of the application code
 COPY . .
-# Build the Next.js application
-# The standalone output mode is handled by next.config.js,
-# so the standard build command is used.
+
+# Build the application
+# NEXT_PUBLIC_ variables are now available from the ENV declarations above
 RUN pnpm build
 
-# --- Runner ---
-FROM base AS runner
-# Set the working directory
+# Stage 2: Create the production image
+FROM node:20-slim AS runner
 WORKDIR /app
 
-# Set environment variables
-# The PORT environment variable is used by Next.js to start the server on a specific port.
-# Cloud Run automatically sets this to 8080, but it's good practice to have it.
-ENV NODE_ENV=production
-# PORT is automatically set by Cloud Run. If running locally with Docker, you'd map this.
-# ENV PORT=3000 (Cloud Run will override this with 8080 by default)
+ENV NODE_ENV production
+# ENV NEXT_TELEMETRY_DISABLED 1 # Uncomment to disable telemetry
 
-# Copy the standalone Next.js output from the builder stage
-# This includes the .next/standalone folder and the public and .next/static folders
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/static ./.next/static
+# Copy only necessary files from the build stage
+COPY --from=base /app/next.config.ts ./
+COPY --from=base /app/public ./public
+COPY --from=base /app/package.json ./package.json
 
-# Expose the port the app runs on (Next.js default is 3000, Cloud Run default is 8080)
-# Cloud Run will use the PORT env var set by its environment.
+# Next.js standalone output requires a specific structure
+# Copy the standalone folder
+COPY --from=base --chown=nodejs:nodejs /app/.next/standalone ./
+# Copy the static assets from .next/static (if any)
+COPY --from=base --chown=nodejs:nodejs /app/.next/static ./.next/static
+
+USER nodejs
+
 EXPOSE 3000
+ENV PORT 3000
+# ENV HOSTNAME "0.0.0.0" # Uncomment to listen on all interfaces for container health checks if needed
 
-# The command to run when the container starts
-# This uses the server.js file from the standalone output.
 CMD ["node", "server.js"]
