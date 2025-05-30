@@ -1,13 +1,15 @@
+# This workflow builds and deploys a Next.js application to Google Cloud Run
+# when changes are pushed to the main branch.
 
 name: Deploy to Cloud Run
 
 on:
   push:
     branches:
-      - main # Or your main branch
+      - main # Or your specific deployment branch
 
 env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Set this secret to 'coffeespot-booking-461302'
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Should be 'coffeespot-booking-461302'
   GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
   SERVICE_NAME: coffeespot-booking-service # Name of your Cloud Run service
   ARTIFACT_REGISTRY_REPO: coffeespot-booking-repo # Name of your Artifact Registry repository
@@ -26,14 +28,14 @@ jobs:
 
       - name: Google Auth
         id: auth
-        uses: 'google-github-actions/auth@v2'
+        uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # Ensure this secret is set in GitHub
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # e.g., projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider
           service_account: 'bookings-github-actions-deploy@coffeespot-booking-461302.iam.gserviceaccount.com'
-          audience: 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicit audience
+          audience: '//iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicit URL-style audience
 
       - name: Set up Cloud SDK
-        uses: 'google-github-actions/setup-gcloud@v2'
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
@@ -54,7 +56,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         id: deploy
-        uses: 'google-github-actions/deploy-cloudrun@v2'
+        uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.GAR_LOCATION }}
