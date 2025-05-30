@@ -7,7 +7,7 @@ on:
       - main # Or your main branch
 
 env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Should be 'coffeespot-booking-461302'
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Set this secret to 'coffeespot-booking-461302'
   GAR_LOCATION: us-central1 # Google Cloud region for Artifact Registry and Cloud Run
   SERVICE_NAME: coffeespot-booking-service # Name of your Cloud Run service
   ARTIFACT_REGISTRY_REPO: coffeespot-booking-repo # Name of your Artifact Registry repository
@@ -28,9 +28,9 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }} # Should be 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # Ensure this secret is set in GitHub
           service_account: 'bookings-github-actions-deploy@coffeespot-booking-461302.iam.gserviceaccount.com'
-          audience: 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicitly set audience
+          audience: 'projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider' # Explicit audience
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
@@ -67,4 +67,3 @@ jobs:
 
       - name: Show Deployed URL Test
         run: echo "Deployment URL will appear here (once steps.deploy.outputs.url is confirmed working)."
-
