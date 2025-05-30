@@ -31,7 +31,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/YOUR_OIDC_PROVIDER_ID
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # Service account in project 182184842256 (or the one with permissions)
-          audience: 'https://iam.googleapis.com/projects/182184842256/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+          audience: 'google-github-actions/auth'
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
