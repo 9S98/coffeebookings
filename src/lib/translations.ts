@@ -9,11 +9,12 @@ export const translations: AllTranslations = {
     language: "Language",
     english: "English",
     arabic: "Arabic",
-    selectGender: "Choose your booking", // Updated
+    selectGender: "Choose your booking",
     men: "Men",
     women: "Women",
     selectCupCategory: "Select Package",
     cupsLabel: "{count} cups",
+    servingsLabel: "{count} servings", // New translation
     durationLabel: "({hours} hours)",
     selectDate: "Select Date",
     selectTimeSlot: "Select Time Slot",
@@ -66,6 +67,7 @@ export const translations: AllTranslations = {
     cat100cups: "100 Cups",
     cat150cups: "150 Cups",
     cat300cups: "300 Cups",
+    catIceCreamServings: "Ice Cream (15 Servings)", // New translation
     fieldRequired: "This field is required.",
     invalidPhone: "Invalid phone number.",
     invalidUrl: "Invalid URL.",
@@ -96,11 +98,12 @@ export const translations: AllTranslations = {
     language: "اللغة",
     english: "الإنجليزية",
     arabic: "العربية",
-    selectGender: "اختر نوع الحجز", // Updated
+    selectGender: "اختر نوع الحجز",
     men: "رجال",
     women: "نساء",
     selectCupCategory: "اختر الباقة",
     cupsLabel: "{count} أكواب",
+    servingsLabel: "{count} حصص", // New translation
     durationLabel: "({hours} ساعات)",
     selectDate: "اختر التاريخ",
     selectTimeSlot: "اختر الوقت",
@@ -153,6 +156,7 @@ export const translations: AllTranslations = {
     cat100cups: "100 كوب",
     cat150cups: "150 كوبًا",
     cat300cups: "300 كوب",
+    catIceCreamServings: "آيس كريم (15 حصة)", // New translation
     fieldRequired: "هذا الحقل مطلوب.",
     invalidPhone: "رقم هاتف غير صالح.",
     invalidUrl: "رابط غير صالح.",

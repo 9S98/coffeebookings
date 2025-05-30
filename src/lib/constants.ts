@@ -1,3 +1,4 @@
+
 import type { CupCategory } from '@/types';
 
 export const CUP_CATEGORIES: CupCategory[] = [
@@ -9,6 +10,7 @@ export const CUP_CATEGORIES: CupCategory[] = [
   { id: '100cups', labelKey: 'cat100cups', cups: 100, durationHours: 3 },
   { id: '150cups', labelKey: 'cat150cups', cups: 150, durationHours: 4 },
   { id: '300cups', labelKey: 'cat300cups', cups: 300, durationHours: 4 },
+  { id: 'iceCreamServings', labelKey: 'catIceCreamServings', cups: 15, durationHours: 1, womenOnly: true, unitKey: 'servingsLabel' },
 ];
 
 export const AGREEMENT_URL = "https://1drv.ms/b/c/62ab161b051030cd/IQTymTtxEyIxRKjqLnHYalCdAYwGseIO8w9UrZBdOvEiI9A";
