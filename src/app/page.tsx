@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Users, Coffee, CalendarDays, Info, FileText, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Users, Coffee, CalendarDays, Info, FileText, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle, IceCream } from 'lucide-react'; // Added IceCream
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
 
@@ -32,6 +32,7 @@ export default function BookingPage() {
   const { toast } = useToast();
 
   const [selectedGender, setSelectedGender] = useState<Gender | null>(null);
+  const [wantsIceCream, setWantsIceCream] = useState<boolean | null>(null);
   const [selectedCupCategory, setSelectedCupCategory] = useState<CupCategory | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlotData | null>(null);
@@ -40,7 +41,7 @@ export default function BookingPage() {
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingFormSchema),
-    mode: 'onChange', // Validate on change for immediate button enabling
+    mode: 'onChange',
     defaultValues: {
       name: '',
       phone: '',
@@ -53,12 +54,55 @@ export default function BookingPage() {
     },
   });
 
+  // Effect to clear dependent selections when higher-level choices change
+  useEffect(() => { // When gender changes
+    setWantsIceCream(null);
+    setSelectedCupCategory(null);
+    setSelectedDate(undefined);
+    setSelectedTimeSlot(null);
+  }, [selectedGender]);
+
+  useEffect(() => { // When ice cream choice changes (for women) or gender context changes
+    if (selectedGender === 'women') {
+      if (wantsIceCream === true) {
+        const iceCreamCat = CUP_CATEGORIES.find(c => c.id === 'iceCreamServings');
+        setSelectedCupCategory(iceCreamCat || null);
+      } else if (wantsIceCream === false) {
+        setSelectedCupCategory(null); // Allow selection from other packages
+      }
+      // Reset date/time if ice cream choice made or changed
+      setSelectedDate(undefined);
+      setSelectedTimeSlot(null);
+    } else {
+      // If gender is not women, or becomes not women, ensure wantsIceCream is null
+      // and cup category is not ice cream (unless it was already null)
+      setWantsIceCream(null);
+      if (selectedCupCategory?.id === 'iceCreamServings') {
+        setSelectedCupCategory(null);
+      }
+    }
+  }, [wantsIceCream, selectedGender]);
+
+
+  useEffect(() => { // When actual selectedCupCategory changes
+    setSelectedDate(undefined);
+    setSelectedTimeSlot(null);
+  }, [selectedCupCategory]);
+
+  useEffect(() => { // When date changes
+    setSelectedTimeSlot(null);
+  }, [selectedDate]);
+
+
   const filteredCupCategories = useMemo(() => {
-    if (!selectedGender) return [];
+    // This list is for the RadioGroup if not choosing ice cream, or for men
     return CUP_CATEGORIES.filter(category => {
+      if (category.id === 'iceCreamServings') return false; // Ice cream is handled by its own Yes/No
       if (selectedGender === 'men' && category.womenOnly) {
         return false;
       }
+      // For women (who have selected 'No' for ice cream), filter out womenOnly packages if any others exist.
+      // Currently, only ice cream is womenOnly, so this is straightforward.
       return true;
     });
   }, [selectedGender]);
@@ -108,9 +152,10 @@ export default function BookingPage() {
         });
         form.reset();
         setSelectedGender(null);
-        setSelectedCupCategory(null);
-        setSelectedDate(undefined);
-        setSelectedTimeSlot(null);
+        // wantsIceCream will be reset by useEffect on selectedGender change
+        // selectedCupCategory will be reset by useEffect on selectedGender change
+        // selectedDate will be reset by useEffect on selectedGender change
+        // selectedTimeSlot will be reset by useEffect on selectedGender change
         setAgreementFile(null);
         const fileInput = document.getElementById('agreementFile') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
@@ -147,22 +192,6 @@ export default function BookingPage() {
 
   const dateLocale = language === 'ar' ? arSA : enUS;
 
-  // Effect to clear dependent selections when a higher-level selection changes
-  useEffect(() => {
-    setSelectedCupCategory(null);
-    setSelectedDate(undefined);
-    setSelectedTimeSlot(null);
-  }, [selectedGender]);
-
-  useEffect(() => {
-    setSelectedDate(undefined);
-    setSelectedTimeSlot(null);
-  }, [selectedCupCategory]);
-
-  useEffect(() => {
-    setSelectedTimeSlot(null);
-  }, [selectedDate]);
-
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
@@ -173,7 +202,6 @@ export default function BookingPage() {
               value={selectedGender || undefined}
               onValueChange={(value: Gender) => {
                 setSelectedGender(value);
-                // Dependent selections are cleared by useEffect
               }}
               className="flex gap-4"
               dir={dir}
@@ -189,46 +217,84 @@ export default function BookingPage() {
             </RadioGroup>
           </SectionWrapper>
 
-          {selectedGender && (
-            <SectionWrapper titleKey="selectCupCategory" icon={<Coffee className="h-6 w-6" />}>
+          {selectedGender === 'women' && (
+            <SectionWrapper titleKey="addIceCream" icon={<IceCream className="h-6 w-6" />}>
               <RadioGroup
-                value={selectedCupCategory?.id || ""}
-                onValueChange={(value) => {
-                  setSelectedCupCategory(filteredCupCategories.find(c => c.id === value) || null);
-                   // Dependent selections are cleared by useEffect
+                value={wantsIceCream === null ? "" : String(wantsIceCream)}
+                onValueChange={(value: string) => {
+                  setWantsIceCream(value === 'true');
                 }}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+                className="flex gap-4"
                 dir={dir}
               >
-                {filteredCupCategories.map(category => (
-                  <div key={category.id}>
-                    <RadioGroupItem value={category.id} id={category.id} className="sr-only" />
-                    <Label
-                      htmlFor={category.id}
-                      className={cn(
-                        "flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer h-full",
-                        selectedCupCategory?.id === category.id && "border-primary ring-2 ring-primary"
-                      )}
-                    >
-                      <span className="font-semibold">{t(category.labelKey)}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {category.unitKey ? t(category.unitKey, { count: category.cups }) : t('cupsLabel', { count: category.cups })}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{t('durationLabel', { hours: category.durationHours })}</span>
-                    </Label>
-                  </div>
-                ))}
+                <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                  <RadioGroupItem value="true" id="iceCreamYes" />
+                  <Label htmlFor="iceCreamYes" className="text-lg">{t('yes')}</Label>
+                </div>
+                <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                  <RadioGroupItem value="false" id="iceCreamNo" />
+                  <Label htmlFor="iceCreamNo" className="text-lg">{t('no')}</Label>
+                </div>
               </RadioGroup>
             </SectionWrapper>
           )}
 
-          {selectedGender && selectedCupCategory && (
+          {selectedGender && (wantsIceCream !== null || selectedGender === 'men') && ( // Show package section if gender is men OR if women and ice cream choice is made
+            <SectionWrapper titleKey="selectCupCategory" icon={<Coffee className="h-6 w-6" />}>
+              {selectedGender === 'women' && wantsIceCream === true && selectedCupCategory?.id === 'iceCreamServings' ? (
+                <div className="p-4 border rounded-md bg-secondary/30 dark:bg-secondary/20">
+                  <h3 className="text-lg font-semibold text-primary">{t(selectedCupCategory.labelKey)}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedCupCategory.unitKey ? t(selectedCupCategory.unitKey, { count: selectedCupCategory.cups }) : t('cupsLabel', { count: selectedCupCategory.cups })}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{t('durationLabel', { hours: selectedCupCategory.durationHours })}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{t('iceCreamPackageSelectedInfo')}</p>
+                </div>
+              ) : (
+                (selectedGender === 'men' || (selectedGender === 'women' && wantsIceCream === false)) && filteredCupCategories.length > 0 && (
+                  <RadioGroup
+                    value={selectedCupCategory?.id || ""}
+                    onValueChange={(value) => {
+                      setSelectedCupCategory(filteredCupCategories.find(c => c.id === value) || null);
+                    }}
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+                    dir={dir}
+                  >
+                    {filteredCupCategories.map(category => (
+                      <div key={category.id}>
+                        <RadioGroupItem value={category.id} id={category.id} className="sr-only" />
+                        <Label
+                          htmlFor={category.id}
+                          className={cn(
+                            "flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer h-full",
+                            selectedCupCategory?.id === category.id && "border-primary ring-2 ring-primary"
+                          )}
+                        >
+                          <span className="font-semibold">{t(category.labelKey)}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {category.unitKey ? t(category.unitKey, { count: category.cups }) : t('cupsLabel', { count: category.cups })}
+                          </span>
+                          <span className="text-xs text-muted-foreground">{t('durationLabel', { hours: category.durationHours })}</span>
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                )
+              )}
+              {selectedGender === 'women' && wantsIceCream === false && filteredCupCategories.length === 0 && (
+                 <p className="text-muted-foreground text-center">{t('noBookingsForDate')}</p> // Or some other message like "No other packages available"
+              )}
+            </SectionWrapper>
+          )}
+
+
+          {selectedCupCategory && ( // This implies gender is selected, and for women, ice cream choice is made
             <SectionWrapper titleKey="selectDate" icon={<CalendarDays className="h-6 w-6" />}>
                <div className="flex justify-center">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
-                  onSelect={(date) => { setSelectedDate(date); /* Dependent selections are cleared by useEffect */ }}
+                  onSelect={setSelectedDate}
                   initialFocus
                   disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() -1))}
                   locale={dateLocale}
@@ -239,7 +305,7 @@ export default function BookingPage() {
             </SectionWrapper>
           )}
 
-          {selectedGender && selectedCupCategory && selectedDate && (
+          {selectedCupCategory && selectedDate && (
             <SectionWrapper titleKey="selectTimeSlot" icon={<Clock className="h-6 w-6" />}>
               {availableTimeSlots.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
@@ -267,7 +333,7 @@ export default function BookingPage() {
             </SectionWrapper>
           )}
 
-          {selectedGender && selectedCupCategory && selectedDate && selectedTimeSlot && (
+          {selectedCupCategory && selectedDate && selectedTimeSlot && (
             <>
               <SectionWrapper titleKey="customerDetails" icon={<Info className="h-6 w-6" />}>
                 <div className="space-y-4">

@@ -14,7 +14,7 @@ export const translations: AllTranslations = {
     women: "Women",
     selectCupCategory: "Select Package",
     cupsLabel: "{count} cups",
-    servingsLabel: "{count} servings", // New translation
+    servingsLabel: "{count} servings",
     durationLabel: "({hours} hours)",
     selectDate: "Select Date",
     selectTimeSlot: "Select Time Slot",
@@ -67,7 +67,7 @@ export const translations: AllTranslations = {
     cat100cups: "100 Cups",
     cat150cups: "150 Cups",
     cat300cups: "300 Cups",
-    catIceCreamServings: "Ice Cream (15 Servings)", // New translation
+    catIceCreamServings: "Ice Cream (15 Servings)",
     fieldRequired: "This field is required.",
     invalidPhone: "Invalid phone number.",
     invalidUrl: "Invalid URL.",
@@ -89,7 +89,11 @@ export const translations: AllTranslations = {
     importantAgreementMessage: "THE AGREEMENT HAS TO BE SIGNED AND UPLOADED OTHERWISE THE BOOKING WILL BE CANCELED AUTOMATICALLY AND THE BOOKING FEE WILL NOT BE REFUNDED.",
     viewAgreement: "View Agreement",
     openLink: "Open Link",
-    bookingCreatedAt: "Booking created at"
+    bookingCreatedAt: "Booking created at",
+    yes: "Yes",
+    no: "No",
+    addIceCream: "Add Ice Cream?",
+    iceCreamPackageSelectedInfo: "Ice cream package automatically selected. To choose another package, select 'No' for ice cream."
   },
   ar: {
     appName: "لا في",
@@ -103,7 +107,7 @@ export const translations: AllTranslations = {
     women: "نساء",
     selectCupCategory: "اختر الباقة",
     cupsLabel: "{count} أكواب",
-    servingsLabel: "{count} حصص", // New translation
+    servingsLabel: "{count} حصص",
     durationLabel: "({hours} ساعات)",
     selectDate: "اختر التاريخ",
     selectTimeSlot: "اختر الوقت",
@@ -156,7 +160,7 @@ export const translations: AllTranslations = {
     cat100cups: "100 كوب",
     cat150cups: "150 كوبًا",
     cat300cups: "300 كوب",
-    catIceCreamServings: "آيس كريم (15 حصة)", // New translation
+    catIceCreamServings: "آيس كريم (15 حصة)",
     fieldRequired: "هذا الحقل مطلوب.",
     invalidPhone: "رقم هاتف غير صالح.",
     invalidUrl: "رابط غير صالح.",
@@ -178,6 +182,10 @@ export const translations: AllTranslations = {
     importantAgreementMessage: "يجب توقيع الاتفاقية وتحميلها وإلا سيتم إلغاء الحجز تلقائيًا ولن يتم استرداد رسوم الحجز.",
     viewAgreement: "عرض الاتفاقية",
     openLink: "فتح الرابط",
-    bookingCreatedAt: "تم إنشاء الحجز في"
+    bookingCreatedAt: "تم إنشاء الحجز في",
+    yes: "نعم",
+    no: "لا",
+    addIceCream: "إضافة آيس كريم؟",
+    iceCreamPackageSelectedInfo: "تم تحديد باقة الآيس كريم تلقائيًا. لاختيار باقة أخرى، حدد 'لا' للآيس كريم."
   },
 };

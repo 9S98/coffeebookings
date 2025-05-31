@@ -1,6 +1,8 @@
+
 "use client";
 
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { Cog, Home } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -14,12 +16,16 @@ import {
 export default function AppHeader() {
   const { language, setLanguage, t, dir } = useLanguage();
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.title = t('appName');
+    }
+  }, [t, language]);
+
   return (
     <header className="bg-primary text-primary-foreground shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-          {/* <Sun className="h-7 w-7" /> Replaced Coffee with Sun, or use a generic logo */}
-          {/* Removed SVG logo */}
           <span>LA VIE</span>
         </Link>
         <nav className="flex items-center gap-4">
