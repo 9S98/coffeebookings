@@ -1,97 +1,98 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 96%; /* #F5F5F5 (Light Gray) */
-    --foreground: 0 0% 20%; /* #333333 (Dark Gray) */
+    --background: 210 40% 98%; /* Very light cool gray */
+    --foreground: 210 10% 23%; /* Dark grayish blue */
 
-    --card: 0 0% 100%; /* #FFFFFF (White) */
-    --card-foreground: 0 0% 20%;
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 210 10% 23%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
+    --popover-foreground: 210 10% 23%;
 
-    --primary: 0 0% 35%; /* #595959 (Medium-Dark Gray) */
-    --primary-foreground: 0 0% 98%; /* #FAFAFA (Off-White) */
+    --primary: 195 65% 45%; /* Clear, medium sophisticated blue */
+    --primary-foreground: 210 40% 98%; /* Light color for text on primary */
 
-    --secondary: 0 0% 90%; /* #E5E5E5 (Lighter Gray) */
-    --secondary-foreground: 0 0% 25%; /* #404040 */
+    --secondary: 200 50% 93%; /* Light grayish blue */
+    --secondary-foreground: 195 65% 35%; /* Darker blue for text on secondary */
 
-    --muted: 0 0% 92%; /* #EBEBEB (Very Light Gray) */
-    --muted-foreground: 0 0% 45%; /* #737373 (Medium Gray) */
+    --muted: 200 40% 95%; /* Lighter muted blue-gray */
+    --muted-foreground: 210 10% 45%; /* Medium grayish blue for muted text */
 
-    --accent: 0 0% 50%; /* #808080 (Gray) */
-    --accent-foreground: 0 0% 98%;
+    --accent: 195 60% 55%; /* Slightly lighter/brighter primary for accents */
+    --accent-foreground: 210 40% 98%; /* Light text for on accent */
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 70% 50%; /* Keeping destructive noticeable */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 85%; /* #D9D9D9 (Light Gray Border) */
-    --input: 0 0% 94%; /* #F0F0F0 (Very Light Gray Input BG) */
-    --ring: 0 0% 45%; /* #737373 (Medium Gray Ring) */
+    --border: 200 30% 88%; /* Soft border color */
+    --input: 200 30% 96%; /* Slightly adjusted input background */
+    --ring: 195 60% 55%; /* Ring color same as accent for consistency */
 
-    --chart-1: 0 0% 50%;
-    --chart-2: 0 0% 60%;
-    --chart-3: 0 0% 70%;
-    --chart-4: 0 0% 80%;
-    --chart-5: 0 0% 90%;
-    --radius: 0.3rem;
+    --chart-1: 195 60% 50%;
+    --chart-2: 195 60% 60%;
+    --chart-3: 195 60% 70%;
+    --chart-4: 195 60% 80%;
+    --chart-5: 195 60% 90%;
+    --radius: 0.5rem; /* Slightly larger radius for modern feel */
 
-    --sidebar-background: 0 0% 94%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 0 0% 35%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 88%;
-    --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 0 0% 80%;
-    --sidebar-ring: 0 0% 45%;
+    --sidebar-background: 210 30% 96%;
+    --sidebar-foreground: 210 10% 23%;
+    --sidebar-primary: 195 65% 45%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 200 50% 90%;
+    --sidebar-accent-foreground: 195 65% 35%;
+    --sidebar-border: 200 30% 85%;
+    --sidebar-ring: 195 60% 55%;
   }
 
   .dark {
-    --background: 0 0% 10%; /* #1A1A1A (Very Dark Gray) */
-    --foreground: 0 0% 85%; /* #D9D9D9 (Light Gray Text) */
+    --background: 210 20% 12%; /* Dark cool gray-blue */
+    --foreground: 210 30% 85%; /* Light gray-blue text */
 
-    --card: 0 0% 15%; /* #262626 (Dark Gray Card) */
-    --card-foreground: 0 0% 85%;
+    --card: 210 18% 18%; /* Darker card background */
+    --card-foreground: 210 30% 85%;
 
-    --popover: 0 0% 15%;
-    --popover-foreground: 0 0% 85%;
+    --popover: 210 18% 18%;
+    --popover-foreground: 210 30% 85%;
 
-    --primary: 0 0% 60%; /* #999999 (Medium Light Gray for Dark Mode Primary) */
-    --primary-foreground: 0 0% 10%; /* #1A1A1A (Dark text on light gray primary) */
+    --primary: 195 60% 60%; /* Lighter, vibrant blue for dark mode primary */
+    --primary-foreground: 210 15% 15%; /* Dark text for on dark primary */
 
-    --secondary: 0 0% 25%; /* #404040 (Darker Gray) */
-    --secondary-foreground: 0 0% 80%; /* #CCCCCC */
+    --secondary: 210 15% 25%; /* Darker secondary */
+    --secondary-foreground: 210 30% 80%;
 
-    --muted: 0 0% 20%; /* #333333 */
-    --muted-foreground: 0 0% 60%; /* #999999 */
+    --muted: 210 15% 22%;
+    --muted-foreground: 210 25% 65%;
 
-    --accent: 0 0% 50%; /* #808080 (Gray) */
-    --accent-foreground: 0 0% 98%;
+    --accent: 195 55% 70%; /* Lighter accent for dark mode */
+    --accent-foreground: 210 15% 15%;
 
-    --destructive: 0 70% 50%;
+    --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 30%; /* #4D4D4D (Medium Dark Gray Border) */
-    --input: 0 0% 20%; /* #333333 (Dark Gray Input BG) */
-    --ring: 0 0% 55%; /* #8C8C8C (Medium Gray Ring for Dark) */
+    --border: 210 15% 30%; /* Softer border for dark mode */
+    --input: 210 15% 20%;
+    --ring: 195 55% 70%;
     
-    --chart-1: 0 0% 50%;
-    --chart-2: 0 0% 40%;
-    --chart-3: 0 0% 30%;
-    --chart-4: 0 0% 20%;
-    --chart-5: 0 0% 10%;
+    --chart-1: 195 55% 65%;
+    --chart-2: 195 55% 55%;
+    --chart-3: 195 55% 45%;
+    --chart-4: 195 55% 35%;
+    --chart-5: 195 55% 25%;
 
-    --sidebar-background: 0 0% 12%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 0 0% 60%;
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 0 0% 22%;
-    --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 0 0% 25%;
-    --sidebar-ring: 0 0% 55%;
+    --sidebar-background: 210 18% 15%;
+    --sidebar-foreground: 210 30% 85%;
+    --sidebar-primary: 195 60% 60%;
+    --sidebar-primary-foreground: 210 15% 15%;
+    --sidebar-accent: 210 15% 28%;
+    --sidebar-accent-foreground: 210 30% 85%;
+    --sidebar-border: 210 15% 25%;
+    --sidebar-ring: 195 55% 70%;
   }
 }
 

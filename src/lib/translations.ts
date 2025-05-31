@@ -96,7 +96,7 @@ export const translations: AllTranslations = {
     iceCreamPackageSelectedInfo: "Ice cream package automatically selected. To choose another package, select 'No' for ice cream."
   },
   ar: {
-    appName: "لا في",
+    appName: "لاڨي",
     navHome: "الرئيسية",
     navAdmin: "الإدارة",
     language: "اللغة",

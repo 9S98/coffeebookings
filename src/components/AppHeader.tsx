@@ -26,7 +26,7 @@ export default function AppHeader() {
     <header className="bg-primary text-primary-foreground shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-          <span>LA VIE</span>
+          <span>{t('appName')}</span>
         </Link>
         <nav className="flex items-center gap-4">
           <Link href="/" passHref>
