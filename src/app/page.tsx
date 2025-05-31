@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Users, Coffee, CalendarDays, Info, FileText, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle, IceCream } from 'lucide-react'; // Added IceCream
+import { Users, Coffee, CalendarDays, Info, FileText, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle, IceCream } from 'lucide-react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
 
@@ -54,55 +54,50 @@ export default function BookingPage() {
     },
   });
 
-  // Effect to clear dependent selections when higher-level choices change
-  useEffect(() => { // When gender changes
-    setWantsIceCream(null);
+  useEffect(() => {
     setSelectedCupCategory(null);
     setSelectedDate(undefined);
     setSelectedTimeSlot(null);
+    if (selectedGender === 'men') {
+      setWantsIceCream(null); // Reset ice cream choice if gender changes to men
+    }
   }, [selectedGender]);
 
-  useEffect(() => { // When ice cream choice changes (for women) or gender context changes
+  useEffect(() => {
     if (selectedGender === 'women') {
       if (wantsIceCream === true) {
         const iceCreamCat = CUP_CATEGORIES.find(c => c.id === 'iceCreamServings');
         setSelectedCupCategory(iceCreamCat || null);
       } else if (wantsIceCream === false) {
-        setSelectedCupCategory(null); // Allow selection from other packages
+        setSelectedCupCategory(null); 
       }
-      // Reset date/time if ice cream choice made or changed
-      setSelectedDate(undefined);
-      setSelectedTimeSlot(null);
     } else {
-      // If gender is not women, or becomes not women, ensure wantsIceCream is null
-      // and cup category is not ice cream (unless it was already null)
       setWantsIceCream(null);
       if (selectedCupCategory?.id === 'iceCreamServings') {
         setSelectedCupCategory(null);
       }
     }
+    setSelectedDate(undefined);
+    setSelectedTimeSlot(null);
   }, [wantsIceCream, selectedGender]);
 
 
-  useEffect(() => { // When actual selectedCupCategory changes
+  useEffect(() => { 
     setSelectedDate(undefined);
     setSelectedTimeSlot(null);
   }, [selectedCupCategory]);
 
-  useEffect(() => { // When date changes
+  useEffect(() => { 
     setSelectedTimeSlot(null);
   }, [selectedDate]);
 
 
   const filteredCupCategories = useMemo(() => {
-    // This list is for the RadioGroup if not choosing ice cream, or for men
     return CUP_CATEGORIES.filter(category => {
-      if (category.id === 'iceCreamServings') return false; // Ice cream is handled by its own Yes/No
+      if (category.id === 'iceCreamServings') return false; 
       if (selectedGender === 'men' && category.womenOnly) {
         return false;
       }
-      // For women (who have selected 'No' for ice cream), filter out womenOnly packages if any others exist.
-      // Currently, only ice cream is womenOnly, so this is straightforward.
       return true;
     });
   }, [selectedGender]);
@@ -152,10 +147,10 @@ export default function BookingPage() {
         });
         form.reset();
         setSelectedGender(null);
-        // wantsIceCream will be reset by useEffect on selectedGender change
-        // selectedCupCategory will be reset by useEffect on selectedGender change
-        // selectedDate will be reset by useEffect on selectedGender change
-        // selectedTimeSlot will be reset by useEffect on selectedGender change
+        setWantsIceCream(null);
+        setSelectedCupCategory(null);
+        setSelectedDate(undefined);
+        setSelectedTimeSlot(null);
         setAgreementFile(null);
         const fileInput = document.getElementById('agreementFile') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
@@ -195,6 +190,12 @@ export default function BookingPage() {
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
+      <div className="text-center my-8">
+        <h1 className="text-5xl font-bold text-primary">{t('appName')}</h1>
+        <p className="text-xl text-muted-foreground mt-2">{t('pageSlogan')}</p>
+        <p className="text-md text-muted-foreground">{t('pageLocation')}</p>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <SectionWrapper titleKey="selectGender" icon={<Users className="h-6 w-6" />}>
@@ -239,7 +240,7 @@ export default function BookingPage() {
             </SectionWrapper>
           )}
 
-          {selectedGender && (wantsIceCream !== null || selectedGender === 'men') && ( // Show package section if gender is men OR if women and ice cream choice is made
+          {selectedGender && (wantsIceCream !== null || selectedGender === 'men') && (
             <SectionWrapper titleKey="selectCupCategory" icon={<Coffee className="h-6 w-6" />}>
               {selectedGender === 'women' && wantsIceCream === true && selectedCupCategory?.id === 'iceCreamServings' ? (
                 <div className="p-4 border rounded-md bg-secondary/30 dark:bg-secondary/20">
@@ -282,13 +283,13 @@ export default function BookingPage() {
                 )
               )}
               {selectedGender === 'women' && wantsIceCream === false && filteredCupCategories.length === 0 && (
-                 <p className="text-muted-foreground text-center">{t('noBookingsForDate')}</p> // Or some other message like "No other packages available"
+                 <p className="text-muted-foreground text-center">{t('noBookingsForDate')}</p>
               )}
             </SectionWrapper>
           )}
 
 
-          {selectedCupCategory && ( // This implies gender is selected, and for women, ice cream choice is made
+          {selectedCupCategory && ( 
             <SectionWrapper titleKey="selectDate" icon={<CalendarDays className="h-6 w-6" />}>
                <div className="flex justify-center">
                 <Calendar
