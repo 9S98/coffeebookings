@@ -79,7 +79,7 @@ export default function BookingPage() {
     }
     setSelectedDate(undefined);
     setSelectedTimeSlot(null);
-  }, [wantsIceCream, selectedGender]);
+  }, [wantsIceCream, selectedGender, selectedCupCategory?.id]);
 
 
   useEffect(() => { 
@@ -245,11 +245,7 @@ export default function BookingPage() {
               {selectedGender === 'women' && wantsIceCream === true && selectedCupCategory?.id === 'iceCreamServings' ? (
                 <div className="p-4 border rounded-md bg-secondary/30 dark:bg-secondary/20">
                   <h3 className="text-lg font-semibold text-primary">{t(selectedCupCategory.labelKey)}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedCupCategory.unitKey ? t(selectedCupCategory.unitKey, { count: selectedCupCategory.cups }) : t('cupsLabel', { count: selectedCupCategory.cups })}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{t('durationLabel', { hours: selectedCupCategory.durationHours })}</p>
-                  <p className="mt-2 text-xs text-muted-foreground">{t('iceCreamPackageSelectedInfo')}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{t('iceCreamPackageSelectedInfo')}</p>
                 </div>
               ) : (
                 (selectedGender === 'men' || (selectedGender === 'women' && wantsIceCream === false)) && filteredCupCategories.length > 0 && (
@@ -509,3 +505,5 @@ export default function BookingPage() {
     </div>
   );
 }
+
+    

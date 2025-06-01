@@ -23,8 +23,8 @@
     --muted: 0 0% 95%; /* Very Light Gray for muted backgrounds */
     --muted-foreground: 0 0% 45%; /* Medium Gray for muted text */
 
-    --accent: 0 0% 40%; /* Medium Gray for accents (e.g., hover states) */
-    --accent-foreground: 0 0% 98%; /* Almost White for text on accent elements */
+    --accent: 0 0% 90%; /* Subtle Light Gray for accents (e.g., hover states on neutral elements) */
+    --accent-foreground: 0 0% 15%; /* Dark text for accents */
 
     --destructive: 0 70% 50%; /* Red for destructive actions */
     --destructive-foreground: 0 0% 98%; /* Light color for text on destructive elements */
@@ -70,8 +70,8 @@
     --muted: 0 0% 18%; /* Dark Muted Gray */
     --muted-foreground: 0 0% 60%; /* Medium-Light Gray for muted text */
 
-    --accent: 0 0% 30%; /* Medium-Dark Gray for accents */
-    --accent-foreground: 0 0% 92%; /* Light Gray for text on accent */
+    --accent: 0 0% 20%; /* Subtle Dark Gray for accents (e.g., hover states on neutral elements) */
+    --accent-foreground: 0 0% 92%; /* Light text for accents */
 
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 98%;
@@ -110,3 +110,5 @@
     direction: rtl;
   }
 }
+
+    
