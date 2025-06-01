@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Users, Coffee, CalendarDays, Info, FileText, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle, IceCream } from 'lucide-react';
+import { Users, Coffee, CalendarDays, Info, FileText, MapPin, CheckCircle, AlertCircle, Clock, AlertTriangle, IceCream, Send } from 'lucide-react';
 import { format } from 'date-fns';
 import { arSA, enUS } from 'date-fns/locale';
 
@@ -38,6 +38,7 @@ export default function BookingPage() {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlotData | null>(null);
   const [agreementFile, setAgreementFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAgreementSection, setShowAgreementSection] = useState(false);
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingFormSchema),
@@ -58,8 +59,9 @@ export default function BookingPage() {
     setSelectedCupCategory(null);
     setSelectedDate(undefined);
     setSelectedTimeSlot(null);
+    setShowAgreementSection(false);
     if (selectedGender === 'men') {
-      setWantsIceCream(null); // Reset ice cream choice if gender changes to men
+      setWantsIceCream(null); 
     }
   }, [selectedGender]);
 
@@ -69,7 +71,9 @@ export default function BookingPage() {
         const iceCreamCat = CUP_CATEGORIES.find(c => c.id === 'iceCreamServings');
         setSelectedCupCategory(iceCreamCat || null);
       } else if (wantsIceCream === false) {
-        setSelectedCupCategory(null); 
+         if (selectedCupCategory?.id === 'iceCreamServings') {
+           setSelectedCupCategory(null); 
+         }
       }
     } else {
       setWantsIceCream(null);
@@ -79,16 +83,19 @@ export default function BookingPage() {
     }
     setSelectedDate(undefined);
     setSelectedTimeSlot(null);
+    setShowAgreementSection(false);
   }, [wantsIceCream, selectedGender, selectedCupCategory?.id]);
 
 
   useEffect(() => { 
     setSelectedDate(undefined);
     setSelectedTimeSlot(null);
+    setShowAgreementSection(false);
   }, [selectedCupCategory]);
 
   useEffect(() => { 
     setSelectedTimeSlot(null);
+    setShowAgreementSection(false);
   }, [selectedDate]);
 
 
@@ -152,6 +159,7 @@ export default function BookingPage() {
         setSelectedDate(undefined);
         setSelectedTimeSlot(null);
         setAgreementFile(null);
+        setShowAgreementSection(false);
         const fileInput = document.getElementById('agreementFile') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
       } else {
@@ -182,8 +190,10 @@ export default function BookingPage() {
       setAgreementFile(null);
     }
   };
+  
+  const isProceedToAgreementDisabled = !form.formState.isValid;
 
-  const isBookingButtonDisabled = !selectedGender || !selectedCupCategory || !selectedDate || !selectedTimeSlot || !agreementFile || !form.formState.isValid || isSubmitting;
+  const isBookingButtonDisabled = !agreementFile || !form.formState.isValid || isSubmitting;
 
   const dateLocale = language === 'ar' ? arSA : enUS;
 
@@ -330,7 +340,7 @@ export default function BookingPage() {
             </SectionWrapper>
           )}
 
-          {selectedCupCategory && selectedDate && selectedTimeSlot && (
+          {selectedCupCategory && selectedDate && selectedTimeSlot && !showAgreementSection && (
             <>
               <SectionWrapper titleKey="customerDetails" icon={<Info className="h-6 w-6" />}>
                 <div className="space-y-4">
@@ -445,6 +455,24 @@ export default function BookingPage() {
                 </div>
               </SectionWrapper>
 
+              <Button 
+                type="button" 
+                size="lg" 
+                className="w-full text-lg" 
+                onClick={() => setShowAgreementSection(true)}
+                disabled={isProceedToAgreementDisabled}
+              >
+                <Send className={`h-5 w-5 ${dir === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                {t('proceedToAgreement')}
+              </Button>
+              {isProceedToAgreementDisabled && (
+                <p className="text-sm text-destructive text-center mt-2">{t('fillCustomerDetailsPrompt')}</p>
+              )}
+            </>
+          )}
+
+          {showAgreementSection && (
+            <>
               <SectionWrapper titleKey="agreement" icon={<FileText className="h-6 w-6" />}>
                 <Alert variant="destructive" className="mb-4">
                   <AlertTriangle className="h-4 w-4" />
@@ -485,25 +513,21 @@ export default function BookingPage() {
                   {!agreementFile && <p className="text-sm mt-2 text-muted-foreground">{t('noFileChosen')}</p>}
                 </FormItem>
               </SectionWrapper>
-            </>
-          )}
 
-          <Button type="submit" size="lg" className="w-full text-lg" disabled={isBookingButtonDisabled}>
-            {isSubmitting ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
-            ) : (
-             t('bookNow')
-            )}
-          </Button>
-          {isBookingButtonDisabled && !isSubmitting && (
-             (!selectedGender || !selectedCupCategory || !selectedDate || !selectedTimeSlot || !agreementFile) && (
-              <p className="text-sm text-destructive text-center mt-2">{t('fillRequiredFields')}</p>
-            )
+              <Button type="submit" size="lg" className="w-full text-lg" disabled={isBookingButtonDisabled}>
+                {isSubmitting ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
+                ) : (
+                 t('bookNow')
+                )}
+              </Button>
+              {isBookingButtonDisabled && !isSubmitting && !agreementFile && (
+                  <p className="text-sm text-destructive text-center mt-2">{t('fillRequiredFields')}</p>
+              )}
+            </>
           )}
         </form>
       </Form>
     </div>
   );
 }
-
-    

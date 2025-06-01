@@ -8,7 +8,7 @@ export const translations: AllTranslations = {
     navAdmin: "Admin",
     language: "Language",
     english: "English",
-    arabic: "Arabic",
+    arabic: "العربية",
     pageSlogan: "꧁༺ 𝙻𝙰 𝚅𝙸𝙴 𝙸𝚂 𝚈𝙾𝚄𝚁 𝙽𝙴𝚆 𝙻𝙸𝙵𝙴 ༻꧂",
     pageLocation: "𝙳𝚘𝚑𝚊, 𝚀𝚊𝚝𝚊𝚛",
     selectGender: "Choose your booking",
@@ -38,6 +38,7 @@ export const translations: AllTranslations = {
     unitNumberPlaceholder: "e.g., Apartment 101",
     googleMapsLink: "Google Maps Link (Optional)",
     googleMapsLinkPlaceholder: "Paste Google Maps link",
+    proceedToAgreement: "Proceed to Agreement",
     agreement: "Agreement",
     agreementInstructions: "Please download, sign, and re-upload the agreement.",
     downloadAgreement: "Download Agreement",
@@ -50,6 +51,7 @@ export const translations: AllTranslations = {
     errorTitle: "Error",
     bookingFailedMessage: "Failed to submit booking. Please try again.",
     fillRequiredFields: "Please fill all required fields and upload the agreement.",
+    fillCustomerDetailsPrompt: "Please complete customer details to proceed.",
     adminDashboard: "Admin Dashboard",
     bookingsForDate: "Bookings for {date}",
     noBookingsForDate: "No bookings for this date.",
@@ -69,7 +71,7 @@ export const translations: AllTranslations = {
     cat100cups: "100 Cups",
     cat150cups: "150 Cups",
     cat300cups: "300 Cups",
-    catIceCreamServings: "Ice Cream (15 Servings)",
+    catIceCreamServings: "Ice Cream",
     fieldRequired: "This field is required.",
     invalidPhone: "Invalid phone number.",
     invalidUrl: "Invalid URL.",
@@ -95,7 +97,7 @@ export const translations: AllTranslations = {
     yes: "Yes",
     no: "No",
     addIceCream: "Add Ice Cream?",
-    iceCreamPackageSelectedInfo: "Ice cream package automatically selected. To choose another package, select 'No' for ice cream."
+    iceCreamPackageSelectedInfo: "Ice cream package automatically selected. To choose another coffee package, select 'No' for ice cream."
   },
   ar: {
     appName: "لاڨي",
@@ -133,6 +135,7 @@ export const translations: AllTranslations = {
     unitNumberPlaceholder: "مثال: شقة 101",
     googleMapsLink: "رابط خرائط جوجل (اختياري)",
     googleMapsLinkPlaceholder: "الصق رابط خرائط جوجل",
+    proceedToAgreement: "المتابعة إلى الاتفاقية",
     agreement: "الاتفاقية",
     agreementInstructions: "يرجى تحميل الاتفاقية وتوقيعها وإعادة تحميلها.",
     downloadAgreement: "تحميل الاتفاقية",
@@ -145,6 +148,7 @@ export const translations: AllTranslations = {
     errorTitle: "خطأ",
     bookingFailedMessage: "فشل إرسال الحجز. يرجى المحاولة مرة أخرى.",
     fillRequiredFields: "يرجى ملء جميع الحقول المطلوبة وتحميل الاتفاقية.",
+    fillCustomerDetailsPrompt: "يرجى إكمال بيانات العميل للمتابعة.",
     adminDashboard: "لوحة تحكم المسؤول",
     bookingsForDate: "حجوزات تاريخ {date}",
     noBookingsForDate: "لا توجد حجوزات لهذا التاريخ.",
@@ -164,7 +168,7 @@ export const translations: AllTranslations = {
     cat100cups: "100 كوب",
     cat150cups: "150 كوبًا",
     cat300cups: "300 كوب",
-    catIceCreamServings: "آيس كريم (15 حصة)",
+    catIceCreamServings: "آيس كريم",
     fieldRequired: "هذا الحقل مطلوب.",
     invalidPhone: "رقم هاتف غير صالح.",
     invalidUrl: "رابط غير صالح.",
@@ -190,6 +194,7 @@ export const translations: AllTranslations = {
     yes: "نعم",
     no: "لا",
     addIceCream: "إضافة آيس كريم؟",
-    iceCreamPackageSelectedInfo: "تم تحديد باقة الآيس كريم تلقائيًا. لاختيار باقة أخرى، حدد 'لا' للآيس كريم."
+    iceCreamPackageSelectedInfo: "تم تحديد باقة الآيس كريم تلقائيًا. لاختيار باقة قهوة أخرى، حدد 'لا' للآيس كريم."
   },
 };
+
