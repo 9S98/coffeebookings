@@ -94,8 +94,18 @@ export function BookingProvider({ children }: { children: ReactNode }) {
       const docRef = await addDoc(collection(db, 'bookings'), bookingDocData);
       console.log("addBooking: Booking successfully added to Firestore with ID: ", docRef.id);
       return true;
-    } catch (error) {
-      console.error("addBooking: Error during booking process: ", error);
+    } catch (error: any) {
+      console.error("addBooking: Error during booking process.");
+      // Check if it's a Firebase error and log specific details
+      if (error && typeof error === 'object' && 'code' in error && 'message' in error) {
+        console.error("Firebase Error Code:", error.code);
+        console.error("Firebase Error Message:", error.message);
+      } else {
+        // Log as a generic error if it doesn't fit Firebase error structure
+        console.error("Generic Error:", error);
+      }
+      // Log the full error object for comprehensive debugging
+      console.error("Full error object:", error);
       return false;
     }
   }, []);
