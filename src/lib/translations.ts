@@ -97,7 +97,8 @@ export const translations: AllTranslations = {
     yes: "Yes",
     no: "No",
     addIceCream: "Add Ice Cream?",
-    iceCreamPackageSelectedInfo: "Ice cream package automatically selected. To choose another coffee package, select 'No' for ice cream."
+    iceCreamPackageSelectedInfo: "Ice cream package automatically selected. To choose another coffee package, select 'No' for ice cream.",
+    paymentNotice: "We will contact you within 24 hours for the payment."
   },
   ar: {
     appName: "لاڨي",
@@ -194,7 +195,8 @@ export const translations: AllTranslations = {
     yes: "نعم",
     no: "لا",
     addIceCream: "إضافة آيس كريم؟",
-    iceCreamPackageSelectedInfo: "تم تحديد باقة الآيس كريم تلقائيًا. لاختيار باقة قهوة أخرى، حدد 'لا' للآيس كريم."
+    iceCreamPackageSelectedInfo: "تم تحديد باقة الآيس كريم تلقائيًا. لاختيار باقة قهوة أخرى، حدد 'لا' للآيس كريم.",
+    paymentNotice: "سوف نتصل بك في غضون 24 ساعة بخصوص الدفع."
   },
 };
 

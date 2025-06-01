@@ -513,6 +513,8 @@ export default function BookingPage() {
                   {!agreementFile && <p className="text-sm mt-2 text-muted-foreground">{t('noFileChosen')}</p>}
                 </FormItem>
               </SectionWrapper>
+              
+              <p className="text-sm text-muted-foreground text-center mb-4">{t('paymentNotice')}</p>
 
               <Button type="submit" size="lg" className="w-full text-lg" disabled={isBookingButtonDisabled}>
                 {isSubmitting ? (
@@ -531,3 +533,4 @@ export default function BookingPage() {
     </div>
   );
 }
+
