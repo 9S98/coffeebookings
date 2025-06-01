@@ -5,95 +5,95 @@
 
 @layer base {
   :root {
-    --background: 0 0% 97%; /* Very Light Gray */
-    --foreground: 0 0% 15%; /* Darkest Gray (almost black) for main text */
+    --background: 0 0% 98%; /* Very Light Gray - slightly lighter */
+    --foreground: 0 0% 20%; /* Dark Gray - slightly softer */
 
     --card: 0 0% 100%; /* White */
-    --card-foreground: 0 0% 15%; /* Darkest Gray for text on cards */
+    --card-foreground: 0 0% 20%; /* Dark Gray for text on cards */
 
     --popover: 0 0% 100%; /* White */
-    --popover-foreground: 0 0% 15%;
+    --popover-foreground: 0 0% 20%;
 
-    --primary: 0 0% 24%; /* Dark Gray for primary actions/buttons */
+    --primary: 0 0% 40%; /* Medium-Light Gray for primary actions */
     --primary-foreground: 0 0% 98%; /* Almost White for text on primary buttons */
 
-    --secondary: 0 0% 92%; /* Light Gray for secondary elements */
-    --secondary-foreground: 0 0% 20%; /* Dark Gray for text on secondary elements */
+    --secondary: 0 0% 94%; /* Light Gray for secondary elements - adjusted */
+    --secondary-foreground: 0 0% 25%; /* Dark Gray for text on secondary elements */
 
-    --muted: 0 0% 95%; /* Very Light Gray for muted backgrounds */
-    --muted-foreground: 0 0% 45%; /* Medium Gray for muted text */
+    --muted: 0 0% 96%; /* Very Light Gray for muted backgrounds - adjusted */
+    --muted-foreground: 0 0% 50%; /* Medium Gray for muted text */
 
-    --accent: 0 0% 90%; /* Subtle Light Gray for accents (e.g., hover states on neutral elements) */
-    --accent-foreground: 0 0% 15%; /* Dark text for accents */
+    --accent: 0 0% 92%; /* Subtle Light Gray for accents - adjusted */
+    --accent-foreground: 0 0% 20%; /* Dark text for accents */
 
     --destructive: 0 70% 50%; /* Red for destructive actions */
     --destructive-foreground: 0 0% 98%; /* Light color for text on destructive elements */
 
-    --border: 0 0% 88%; /* Light Gray for borders */
+    --border: 0 0% 90%; /* Light Gray for borders - adjusted */
     --input: 0 0% 100%; /* White for input backgrounds */
     --ring: 0 0% 55%; /* Medium Gray for focus rings */
 
-    --chart-1: 0 0% 50%;
-    --chart-2: 0 0% 60%;
-    --chart-3: 0 0% 70%;
-    --chart-4: 0 0% 80%;
-    --chart-5: 0 0% 90%;
+    --chart-1: 0 0% 55%;
+    --chart-2: 0 0% 65%;
+    --chart-3: 0 0% 75%;
+    --chart-4: 0 0% 85%;
+    --chart-5: 0 0% 95%;
     --radius: 0.5rem; /* Consistent with previous modern style */
 
     /* Sidebar specific colors, aligned with the gray/white theme */
-    --sidebar-background: 0 0% 96%; /* Slightly different light gray for sidebar bg */
-    --sidebar-foreground: 0 0% 15%;
-    --sidebar-primary: 0 0% 24%;
+    --sidebar-background: 0 0% 97%; /* Slightly different light gray for sidebar bg */
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 0 0% 40%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 90%; /* Lighter gray for sidebar accents */
-    --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 0 0% 85%;
+    --sidebar-accent: 0 0% 92%; 
+    --sidebar-accent-foreground: 0 0% 25%;
+    --sidebar-border: 0 0% 88%;
     --sidebar-ring: 0 0% 55%;
   }
 
   .dark {
-    --background: 0 0% 10%; /* Very Dark Gray / Charcoal */
-    --foreground: 0 0% 92%; /* Light Gray for text */
+    --background: 0 0% 12%; /* Dark Charcoal */
+    --foreground: 0 0% 90%; /* Light Gray for text */
 
-    --card: 0 0% 14%; /* Dark Gray, slightly lighter than bg for cards */
-    --card-foreground: 0 0% 92%;
+    --card: 0 0% 18%; /* Darker Gray, slightly lighter than bg for cards */
+    --card-foreground: 0 0% 90%;
 
-    --popover: 0 0% 14%;
-    --popover-foreground: 0 0% 92%;
+    --popover: 0 0% 18%;
+    --popover-foreground: 0 0% 90%;
 
-    --primary: 0 0% 85%; /* Light Gray for primary actions in dark mode */
-    --primary-foreground: 0 0% 10%; /* Darkest Gray for text on primary */
+    --primary: 0 0% 80%; /* Light Gray for primary actions in dark mode */
+    --primary-foreground: 0 0% 12%; /* Darkest Gray for text on primary */
 
-    --secondary: 0 0% 20%; /* Darker Gray for secondary elements */
-    --secondary-foreground: 0 0% 85%; /* Light Gray for text on secondary */
+    --secondary: 0 0% 25%; /* Darker Gray for secondary elements */
+    --secondary-foreground: 0 0% 80%; /* Light Gray for text on secondary */
 
-    --muted: 0 0% 18%; /* Dark Muted Gray */
-    --muted-foreground: 0 0% 60%; /* Medium-Light Gray for muted text */
+    --muted: 0 0% 22%; /* Dark Muted Gray */
+    --muted-foreground: 0 0% 65%; /* Medium-Light Gray for muted text */
 
-    --accent: 0 0% 20%; /* Subtle Dark Gray for accents (e.g., hover states on neutral elements) */
-    --accent-foreground: 0 0% 92%; /* Light text for accents */
+    --accent: 0 0% 30%; /* Subtle Dark Gray for accents */
+    --accent-foreground: 0 0% 90%; /* Light text for accents */
 
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 25%; /* Dark Gray Border */
-    --input: 0 0% 18%; /* Dark Gray for input backgrounds */
+    --border: 0 0% 30%; /* Dark Gray Border */
+    --input: 0 0% 22%; /* Dark Gray for input backgrounds */
     --ring: 0 0% 70%; /* Light Gray for focus rings */
     
-    --chart-1: 0 0% 65%;
-    --chart-2: 0 0% 55%;
-    --chart-3: 0 0% 45%;
-    --chart-4: 0 0% 35%;
-    --chart-5: 0 0% 25%;
+    --chart-1: 0 0% 60%;
+    --chart-2: 0 0% 50%;
+    --chart-3: 0 0% 40%;
+    --chart-4: 0 0% 30%;
+    --chart-5: 0 0% 20%;
 
     /* Sidebar specific colors for dark mode */
-    --sidebar-background: 0 0% 12%; /* Slightly different dark gray for sidebar bg */
-    --sidebar-foreground: 0 0% 92%;
-    --sidebar-primary: 0 0% 85%;
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 0 0% 22%; /* Darker gray for sidebar accents */
-    --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 0 0% 28%;
+    --sidebar-background: 0 0% 15%; 
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 0 0% 80%;
+    --sidebar-primary-foreground: 0 0% 12%;
+    --sidebar-accent: 0 0% 28%; 
+    --sidebar-accent-foreground: 0 0% 80%;
+    --sidebar-border: 0 0% 32%;
     --sidebar-ring: 0 0% 70%;
   }
 }
@@ -110,5 +110,3 @@
     direction: rtl;
   }
 }
-
-    
