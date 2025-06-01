@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Eye, EyeOff } from 'lucide-react';
 
-const ADMIN_PASSWORD = "Lavie@cofffee!12345";
+const ADMIN_PASSWORD = "Lavie@coffee!12345";
 
 interface AdminLoginProps {
   onLoginSuccess: () => void;
