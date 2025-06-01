@@ -67,55 +67,52 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     bookingCoreData: Omit<Booking, 'id' | 'agreementFileUrl' | 'agreementFilePath' | 'createdAt' | 'date' | 'agreementFileName'> & { date: Date, agreementFileName: string },
     agreementFile: File
   ): Promise<boolean> => {
+    console.log("addBooking: Starting process...");
     try {
-      // 1. Create a preliminary booking document to get an ID (optional, or generate client-side ID)
-      // For simplicity, we'll let Firestore generate the ID upon addDoc.
-      // This means the filePath won't include the bookingId before creation,
-      // or we use a client-generated one for the path.
-      // Let's use a temporary unique name for the file for now.
       const uniqueFileName = `${Date.now()}-${agreementFile.name}`;
-      const filePath = `agreements/${uniqueFileName}`; // Simplified path, ideally use bookingId
+      const filePath = `agreements/${uniqueFileName}`;
       const storageRef = ref(storage, filePath);
 
-      // 2. Upload the file
+      console.log(`addBooking: Attempting to upload file ${agreementFile.name} to ${filePath}`);
       const uploadResult = await uploadBytes(storageRef, agreementFile);
-      const downloadUrl = await getDownloadURL(uploadResult.ref);
+      console.log("addBooking: File upload successful.", uploadResult);
 
-      // 3. Prepare the full booking document
+      console.log("addBooking: Attempting to get download URL...");
+      const downloadUrl = await getDownloadURL(uploadResult.ref);
+      console.log("addBooking: Got download URL: ", downloadUrl);
+
       const bookingDocData = {
         ...bookingCoreData,
-        date: Timestamp.fromDate(bookingCoreData.date), // Convert JS Date to Firestore Timestamp
+        date: Timestamp.fromDate(bookingCoreData.date),
         agreementFileName: agreementFile.name,
         agreementFileUrl: downloadUrl,
-        agreementFilePath: uploadResult.metadata.fullPath, // Use the actual path from upload result
+        agreementFilePath: uploadResult.metadata.fullPath,
         createdAt: serverTimestamp(),
       };
 
-      // 4. Add the document to Firestore
+      console.log("addBooking: Attempting to add document to Firestore with data:", bookingDocData);
       const docRef = await addDoc(collection(db, 'bookings'), bookingDocData);
-      // If we wanted bookingId in the path, we'd update the filePath here and potentially move/rename the file or re-upload.
-      // For now, the uniqueFileName approach is simpler.
-      console.log("Booking added with ID: ", docRef.id);
+      console.log("addBooking: Booking successfully added to Firestore with ID: ", docRef.id);
       return true;
     } catch (error) {
-      console.error("Error adding booking: ", error);
+      console.error("addBooking: Error during booking process: ", error);
       return false;
     }
   }, []);
 
 
   const isSlotBooked = useCallback((date: Date, startTime: string, endTime: string): boolean => {
-    if (loading) return true; // Assume booked while loading to prevent double booking
+    if (loading) return true; 
     return bookings.some(booking =>
       format(booking.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd') &&
-      ((booking.startTime < endTime && booking.endTime > startTime)) // Check for overlap
+      ((booking.startTime < endTime && booking.endTime > startTime)) 
     );
   }, [bookings, loading]);
 
   const getAvailableTimeSlots = useCallback((date: Date, durationHours: number): TimeSlotData[] => {
     const availableSlots: TimeSlotData[] = [];
-    const openingTime = 10; // 10 AM
-    const closingTime = 22; // 10 PM (last slot starts at 9 PM for 1h, 8 PM for 2h etc.)
+    const openingTime = 10; 
+    const closingTime = 22; 
 
     for (let hour = openingTime; hour < closingTime; hour++) {
       const slotStartHour = hour;
