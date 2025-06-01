@@ -196,7 +196,7 @@ export const translations: AllTranslations = {
     no: "لا",
     addIceCream: "إضافة آيس كريم؟",
     iceCreamPackageSelectedInfo: "تم تحديد باقة الآيس كريم تلقائيًا. لاختيار باقة قهوة أخرى، حدد 'لا' للآيس كريم.",
-    paymentNotice: "سوف نتصل بك في غضون 24 ساعة بخصوص الدفع."
+    paymentNotice: "سيتم التواصل بك في خلال 24 ساعة بخصوص الدفع."
   },
 };
 
