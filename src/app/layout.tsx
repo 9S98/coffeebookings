@@ -5,7 +5,7 @@ import { Providers } from './providers';
 import AppHeader from '@/components/AppHeader';
 import FooterContent from '@/components/FooterContent'; // Import the new client component
 
-const inter = Inter({ subsets: ['latin', 'arabic'], variable: '--font-inter' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'LA VIE',
