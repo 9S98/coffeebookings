@@ -13,7 +13,7 @@ export const CUP_CATEGORIES: CupCategory[] = [
   { id: 'iceCreamServings', labelKey: 'catIceCreamServings', cups: 15, durationHours: 1, womenOnly: true, unitKey: 'servingsLabel' },
 ];
 
-export const AGREEMENT_URL = "https://1drv.ms/b/c/62ab161b051030cd/IQTymTtxEyIxRKjqLnHYalCdAYwGseIO8w9UrZBdOvEiI9A";
+export const AGREEMENT_URL = "https://1drv.ms/b/c/62ab161b051030cd/EfKZO3ETIjFEqOoucdhqUJ0BqsnMdxtCrwInXGde-37WdA";
 
 export const BOOKING_HOURS_START = 10; // 10 AM
 export const BOOKING_HOURS_END = 22;   // 10 PM
