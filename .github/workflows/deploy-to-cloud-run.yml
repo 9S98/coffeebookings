@@ -31,7 +31,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:  
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}               
+          service_account: 'bookings-github-actions-deploy@coffeespot-booking-461302.iam.gserviceaccount.com'                
 
                 
       - name: Set up Cloud SDK
